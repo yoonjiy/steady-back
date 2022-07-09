@@ -9,6 +9,9 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class StudyService {
@@ -22,8 +25,7 @@ public class StudyService {
     }
 
     public Long createStudy(StudyRequestDto studyRequestDto) {
-        if(studyRequestDto.getName().isEmpty() || studyRequestDto.getAccount().isEmpty()
-                || studyRequestDto.getTime()==null || studyRequestDto.getMoney()==null || studyRequestDto.getLateMoney()==null) {
+        if(studyRequestDto.getName().isEmpty() || studyRequestDto.getAccount().isEmpty()) {
             throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
         }
 
@@ -35,5 +37,12 @@ public class StudyService {
         studyRepository.save(study);
 
         return study.getId();
+    }
+
+    public List<StudyResponseDto> findStudyList() {
+        return studyRepository.findAll()
+                .stream()
+                .map(study -> new StudyResponseDto(study))
+                .collect(Collectors.toList());
     }
 }

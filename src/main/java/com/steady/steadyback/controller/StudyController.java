@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +21,11 @@ public class StudyController {
     @GetMapping("/{studyId}")
     public StudyResponseDto getStudyById(@PathVariable Long studyId) {
         return studyService.findStudyById(studyId);
+    }
+
+    @GetMapping()
+    public List<StudyResponseDto> getStudyList() {
+        return studyService.findStudyList();
     }
 
     @PostMapping
@@ -34,4 +40,5 @@ public class StudyController {
 
         return ResponseEntity.created(location).body(studyCreateResponseDto);
     }
+
 }

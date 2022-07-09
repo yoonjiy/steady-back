@@ -28,8 +28,6 @@ public class Study {
     String description;
 
     @NotNull
-//    @ColumnDefault("0")
-//    @Column(columnDefinition = "TINYINT", length = 1)
     @Column
     Boolean mon;
 
