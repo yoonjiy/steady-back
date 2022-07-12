@@ -1,18 +1,18 @@
 package com.steady.steadyback.dto;
 
 import com.steady.steadyback.domain.Study;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
-public class StudyRequestDto {
+public class StudyGetResponseDto {
+    private Long studyId;
     private String name;
-    private String description;
     private String uuid;
+    private String description;
     private Boolean mon;
     private Boolean tue;
     private Boolean wed;
@@ -27,9 +27,10 @@ public class StudyRequestDto {
     private Integer lateMoney;
     private Integer peopleCount;
 
-    @Builder
-    public StudyRequestDto(Study study) {
+    public StudyGetResponseDto(Study study) {
+        this.studyId = study.getId();
         this.name = study.getName();
+        this.uuid = study.getUuid();
         this.description = study.getDescription();
         this.mon = study.getMon();
         this.tue = study.getTue();
@@ -43,30 +44,6 @@ public class StudyRequestDto {
         this.minute = study.getMinute();
         this.money = study.getMoney();
         this.lateMoney = study.getLateMoney();
-    }
-
-    public void addUUID(UUID uuid) {
-        this.uuid = uuid.toString();
-    }
-
-    public Study toEntity() {
-        return Study.builder()
-                .name(name)
-                .uuid(uuid)
-                .description(description)
-                .mon(mon)
-                .tue(tue)
-                .wed(wed)
-                .thu(thu)
-                .fri(fri)
-                .sat(sat)
-                .sun(sun)
-                .account(account)
-                .hour(hour)
-                .minute(minute)
-                .money(money)
-                .lateMoney(lateMoney)
-                .peopleCount(peopleCount)
-                .build();
+        this.peopleCount = study.getPeopleCount();
     }
 }
