@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
@@ -22,6 +21,8 @@ public enum ErrorCode {
     STUDY_NOT_FOUND(NOT_FOUND, "해당 스터디 정보를 찾을 수 없습니다."),
     STUDY_POST_NOT_FOUND(NOT_FOUND, "해당 스터디 포스트 정보를 찾을 수 없습니다."),
     REPORT_NOT_FOUND(NOT_FOUND, "해당 신고 정보를 찾을 수 없습니다."),
+
+    UNAUTHORIZED_USER(UNAUTHORIZED, "권한이 없습니다."),
 
     ;
 

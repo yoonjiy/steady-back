@@ -1,5 +1,6 @@
 package com.steady.steadyback.controller;
 
+import com.steady.steadyback.domain.User;
 import com.steady.steadyback.dto.StudyResponseDto;
 import com.steady.steadyback.dto.StudyRequestDto;
 import com.steady.steadyback.dto.StudyGetResponseDto;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -55,5 +57,14 @@ public class StudyController {
         StudyGetResponseDto studyGetResponseDto = studyService.findStudyById(id);
         return studyGetResponseDto;
     }
+
+    @DeleteMapping("/{userId}/leave/{studyId}")
+    public StudyResponseDto leaveStudy(@PathVariable Long userId, @PathVariable Long studyId){
+        studyService.leaveStudy(userId, studyId);
+
+        StudyResponseDto studyResponseDto = new StudyResponseDto(studyId, "DELETED");
+        return studyResponseDto;
+    }
+
 
 }

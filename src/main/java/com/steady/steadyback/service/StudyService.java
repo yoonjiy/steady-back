@@ -1,12 +1,13 @@
 package com.steady.steadyback.service;
 
-import com.steady.steadyback.domain.Study;
-import com.steady.steadyback.domain.StudyRepository;
+import com.steady.steadyback.domain.*;
 import com.steady.steadyback.dto.StudyRequestDto;
 import com.steady.steadyback.dto.StudyGetResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudyService {
     private final StudyRepository studyRepository;
+    private final UserStudyRepository userStudyRepository;
+    private final UserRepository userRepository;
+    private final Authentication authentication;
 
     public StudyGetResponseDto findStudyById(Long id) {
         Study study = studyRepository.findById(id)
@@ -67,5 +71,21 @@ public class StudyService {
         study.updateRule(studyRequestDto);
         studyRepository.save(study);
         return study.getId();
+    }
+
+    public void leaveStudy(Long userId, Long studyId){
+        User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Study study = studyRepository.findById(studyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        UserStudy userStudy = userStudyRepository.findByUserAndStudy(user, study);
+
+        //권한 확인, 로그인한 본인도 아니고 리더도 아니면 예외 처리
+//        if (userStudy.getUser() != loginUser && !userStudy.getLeader()){
+//            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+//        }
+//        else userStudyRepository.delete(userStudy);
     }
 }
