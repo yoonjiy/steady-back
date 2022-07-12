@@ -20,21 +20,23 @@ public class User {
 
     @NotNull
     @Column(length = 50)
-    String email;
+    private String email;
 
     @NotNull
     @Column(length = 50)
-    String password;
+    private String password;
 
     @NotNull
     @Column(length = 13)
-    String phone;
+    private String phone;
 
     @Builder
-    public User(String nickname, String email, String password, String phone) {
+    public User(Long id, String nickname, String email, String password, String phone) {
+        this.id = id;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.phone = phone;
     }
+
 }
