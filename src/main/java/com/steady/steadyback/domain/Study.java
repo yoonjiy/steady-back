@@ -20,69 +20,69 @@ import javax.persistence.*;
 public class Study {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotNull
     @Column(length = 20)
-    String name;
+    private String name;
 
     @NotNull
     @Column(length = 200)
-    String uuid;
+    private String uuid;
 
     @Column(length = 100)
-    String description;
+    private String description;
 
     @NotNull
     @Column
-    Boolean mon;
+    private Boolean mon;
 
     @NotNull
     @Column
-    Boolean tue;
+    private Boolean tue;
 
     @NotNull
     @Column
-    Boolean wed;
+    private Boolean wed;
 
     @NotNull
     @Column
-    Boolean thu;
+    private Boolean thu;
 
     @NotNull
     @Column
-    Boolean fri;
+    private Boolean fri;
 
     @NotNull
     @Column
-    Boolean sat;
+    private Boolean sat;
 
     @NotNull
     @Column
-    Boolean sun;
+    private Boolean sun;
 
     @Column(length = 20)
-    String account;
+    private String account;
 
     @NotNull
     @Column
-    Integer hour;
+    private Integer hour;
 
     @NotNull
     @Column
-    Integer minute;
+    private Integer minute;
 
     @NotNull
     @Column
-    Integer money;
+    private Integer money;
 
     @NotNull
     @Column(name = "latemoney")
-    Integer lateMoney;
+    private Integer lateMoney;
 
     @NotNull
     @Column(name = "people_count")
-    Integer peopleCount;
+    private Integer peopleCount;
 
     @Builder
     public Study(Long id, String name, String uuid, String description, Boolean mon, Boolean tue, Boolean wed, Boolean thu, Boolean fri, Boolean sat, Boolean sun, String account, Integer hour, Integer minute, Integer money, Integer lateMoney, Integer peopleCount) {
