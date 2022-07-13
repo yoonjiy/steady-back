@@ -72,20 +72,4 @@ public class StudyService {
         studyRepository.save(study);
         return study.getId();
     }
-
-    public void leaveStudy(Long userId, Long studyId){
-        User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        Study study = studyRepository.findById(studyId)
-                .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
-
-        UserStudy userStudy = userStudyRepository.findByUserAndStudy(user, study);
-
-        //권한 확인, 로그인한 본인도 아니고 리더도 아니면 예외 처리
-//        if (userStudy.getUser() != loginUser && !userStudy.getLeader()){
-//            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
-//        }
-//        else userStudyRepository.delete(userStudy);
-    }
 }

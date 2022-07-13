@@ -57,14 +57,4 @@ public class StudyController {
         StudyGetResponseDto studyGetResponseDto = studyService.findStudyById(id);
         return studyGetResponseDto;
     }
-
-    @DeleteMapping("/{userId}/leave/{studyId}")
-    public StudyResponseDto leaveStudy(@PathVariable Long userId, @PathVariable Long studyId){
-        studyService.leaveStudy(userId, studyId);
-
-        StudyResponseDto studyResponseDto = new StudyResponseDto(studyId, "DELETED");
-        return studyResponseDto;
-    }
-
-
 }
