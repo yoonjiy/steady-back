@@ -15,11 +15,12 @@ public class UserStudyController {
 
     private final UserStudyService userStudyService;
 
-    //로그인 안되어있으면 로그인 페이지로 리다이렉트 인터셉터
+
+    //로그인 컨트롤러에서 로그인 정상 처리 -> 세션에서 dest 값을 읽어 이전 경로로 리다이렉트
     @GetMapping("/join")
     public UserStudyGetResponseDto joinStudy(@PathParam("token") String token){
-        //로그인 후에만 접근 가능. 토큰 유효하면 가입 처리 후 스터디 페이지로 이동.
-        userStudyService.createUserStudy(token);
+        //토큰 유효하면 가입 처리 후 스터디 페이지로 이동.
+        return userStudyService.createUserStudy(token);
     }
 
     @DeleteMapping("/{userId}/leave/{studyId}")

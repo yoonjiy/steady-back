@@ -1,6 +1,7 @@
 package com.steady.steadyback.service;
 
 import com.steady.steadyback.domain.*;
+import com.steady.steadyback.dto.UserStudyGetResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,16 @@ public class UserStudyService {
 //        else userStudyRepository.delete(userStudy);
     }
 
-    public void createUserStudy(String token){
-        //유효한 url인 지 검증 후 로그인
+    public UserStudyGetResponseDto createUserStudy(String token){
+        //유효한 token인 지 검증 후 가입 처리
+        Study study = studyRepository.findByUuid(token);
+
+        //이미 가입했다면
+
+        if(study != null){
+            //userStudyRepository.save(userStudy);
+        }
+        else throw new CustomException(ErrorCode.STUDY_NOT_FOUND);
 
     }
 }
