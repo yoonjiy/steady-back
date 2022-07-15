@@ -29,6 +29,13 @@ public class UserService {
     }
 
 
+    public void deleteUserById(Long id) {
+        userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        userRepository.deleteById(id);
+    }
+
+
     public UserResponseDto findUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));

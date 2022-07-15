@@ -3,10 +3,7 @@ package com.steady.steadyback.controller;
 import com.steady.steadyback.config.JwtTokenProvider;
 import com.steady.steadyback.domain.User;
 import com.steady.steadyback.domain.UserRepository;
-import com.steady.steadyback.dto.LoginRequestDto;
-import com.steady.steadyback.dto.LoginResponseDto;
-import com.steady.steadyback.dto.SignupRequestDto;
-import com.steady.steadyback.dto.UserResponseDto;
+import com.steady.steadyback.dto.*;
 import com.steady.steadyback.service.UserService;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
@@ -52,9 +49,19 @@ public class UserController {
         return loginResponseDto;
     }
 
+    @DeleteMapping("/{userId}")
+    public UserDeleteResponseDto deleteUser(@PathVariable Long userId) {
+
+        userService.deleteUserById(userId);
+        UserDeleteResponseDto userDeleteResponseDto = new UserDeleteResponseDto(userId, "SUCCESS");
+        return userDeleteResponseDto;
+    }
 
     @GetMapping("/{userId}")
     public UserResponseDto getUserById(@PathVariable Long userId) {
         return userService.findUserById(userId);
     }
+
+
+
 }
