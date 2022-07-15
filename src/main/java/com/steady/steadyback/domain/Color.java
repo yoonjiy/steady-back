@@ -16,5 +16,9 @@ public enum Color {
     PINK("FF5CEF"),
     PURPLE("934CFF");
 
-    private final String value;
+    private String value;
+
+    Color(String value){
+        this.value = value;
+    }
 }
