@@ -10,13 +10,17 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Transactional
@@ -52,10 +56,19 @@ public class UserService {
     }
 
 
+    public List<UserResponseDto> findUserList() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new UserResponseDto(user))
+                .collect(Collectors.toList());
+    }
+
+
     public Boolean checkDuplicateUsers(SignupRequestDto signupRequestDto){
         return userRepository.existsByEmail(signupRequestDto.getEmail());
     }
 
+    @Override
     public Account loadUserByUsername(String email) throws UsernameNotFoundException {
         System.out.println(email);
         return userRepository.findByEmail(email).map(User::toAccount)
