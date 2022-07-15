@@ -50,6 +50,12 @@ public class UserStudy implements Serializable {
         return this.nowFine;
     }
 
+    public Integer refreshNowFineAndGetLastFine(){
+        this.lastFine = this.getNowFine();
+        this.nowFine = 0;
+        return this.lastFine;
+    }
+
     @Builder
     public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFIne, Integer nowFine, Color color){
         this.user = user;

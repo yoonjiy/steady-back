@@ -1,6 +1,9 @@
 package com.steady.steadyback.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,4 +12,8 @@ import java.util.List;
 public interface UserStudyRepository extends JpaRepository<UserStudy, UserStudyID> {
     public UserStudy findByUserAndStudy(User user, Study study);
     public List<UserStudy> findByStudy(Study study);
+
+    @Modifying
+    @Query("update UserStudy u set u.lastFine = :lastFine , u.nowFine = 0")
+    public void updateLastFine(@Param("lastFine") Integer lastFine);
 }

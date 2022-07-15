@@ -1,6 +1,7 @@
 package com.steady.steadyback.service;
 
 import com.steady.steadyback.domain.*;
+import com.steady.steadyback.dto.UserStudyFineResponseDto;
 import com.steady.steadyback.dto.UserStudyGetResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
@@ -47,7 +48,7 @@ public class UserStudyService {
 
         //이미 가입했다면
         UserStudy userAndStudy = userStudyRepository.findByUserAndStudy(user, study);
-        if (userAndStudy==null){
+        if (userAndStudy!=null){
            throw new CustomException(ErrorCode.USER_STUDY_ALREADY_EXISTS);
         }
 
