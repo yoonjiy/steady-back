@@ -24,6 +24,9 @@ public enum ErrorCode {
 
     UNAUTHORIZED_USER(UNAUTHORIZED, "권한이 없습니다."),
 
+
+    USER_STUDY_ALREADY_EXISTS(CONFLICT, "이미 가입한 스터디원입니다.")
+
     ;
 
     private final HttpStatus httpStatus;

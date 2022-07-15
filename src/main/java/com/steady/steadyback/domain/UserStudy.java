@@ -37,7 +37,7 @@ public class UserStudy implements Serializable {
     @NotNull
     private Integer nowFine;
 
-    @Column(length = 10)
+    @Enumerated(EnumType.STRING)
     @NotNull
     private String color;
 
