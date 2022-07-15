@@ -2,6 +2,7 @@ package com.steady.steadyback.domain;
 
 import com.steady.steadyback.util.converter.ColorConverter;
 import com.sun.istack.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,5 +48,16 @@ public class UserStudy implements Serializable {
     public Integer addNowFine() {
         this.nowFine += this.study.getMoney();
         return this.nowFine;
+    }
+
+    @Builder
+    public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFIne, Integer nowFine, Color color){
+        this.user = user;
+        this.study = study;
+        this.leader = leader;
+        this.score = score;
+        this.lastFine = lastFIne;
+        this.nowFine = nowFine;
+        this.color = color;
     }
 }

@@ -7,6 +7,9 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserStudyService {
@@ -49,8 +52,27 @@ public class UserStudyService {
         }
 
         //스터디 가입하기
-        //랜덤 색 배정, 9가지 색 중 스터디원이 이미 가지지 않은 색으로
+        //같은 스터디에서 사용한 컬러 가져오기
+        List<Color> usedColors = userStudyRepository.findByStudy(study)
+                .stream()
+                .map(UserStudy::getColor)
+                .collect(Collectors.toList());
+        //색 배정, 9가지 색 중 스터디원이 이미 가지지 않은 색으로
+        Color color = null;
+        for (Color value : Color.values()){
+            if(!usedColors.contains(value)){
+                color = value;
+                break;
+            }
+        }
+        UserStudy newUserStudy = UserStudy.builder()
+                .user(user)
+                .study(study)
+                .color(color)
+                .build();
 
-        //userStudyRepository.save(userStudy);
+        UserStudy save = userStudyRepository.save(newUserStudy);
+
+        return new UserStudyGetResponseDto(save);
     }
 }

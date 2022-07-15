@@ -1,5 +1,6 @@
 package com.steady.steadyback.dto;
 
+import com.steady.steadyback.domain.Color;
 import com.steady.steadyback.domain.UserStudy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,7 @@ public class UserStudyGetResponseDto {
     private Integer score;
     private Integer lastFine;
     private Integer nowFine;
-    private String color;
+    private Color color;
 
     public UserStudyGetResponseDto(UserStudy userStudy){
         this.userId = userStudy.getUser().getId();

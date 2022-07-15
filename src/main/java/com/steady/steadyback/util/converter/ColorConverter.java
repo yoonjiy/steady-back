@@ -10,6 +10,9 @@ public class ColorConverter implements AttributeConverter<Color, String> {
 
     @Override
     public String convertToDatabaseColumn(Color attribute) {
+        if(attribute==null){
+            return null;
+        }
         return attribute.getValue();
     }
 
