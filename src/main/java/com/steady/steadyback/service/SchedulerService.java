@@ -16,11 +16,6 @@ public class SchedulerService {
         //lastFine update, nowFine 0으로 초기화
         userStudyRepository.findAll()
                 .stream()
-                .forEach(userStudy -> userStudyRepository.updateLastFine(userStudy.refreshNowFineAndGetLastFine()));
-    }
-
-    @Scheduled(cron = "0 0 0 ? * SUN *")
-    public void get1stRanker(){
-
+                .forEach(userStudy -> userStudyRepository.updateLastFine(userStudy.refreshNowFineAndGetLastFine(), userStudy.getUser().getId(), userStudy.getStudy().getId()));
     }
 }
