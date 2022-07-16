@@ -6,8 +6,6 @@ import com.steady.steadyback.dto.StudyGetResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,9 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudyService {
     private final StudyRepository studyRepository;
-    private final UserStudyRepository userStudyRepository;
-    private final UserRepository userRepository;
-    private final Authentication authentication;
 
     public StudyGetResponseDto findStudyById(Long id) {
         Study study = studyRepository.findById(id)

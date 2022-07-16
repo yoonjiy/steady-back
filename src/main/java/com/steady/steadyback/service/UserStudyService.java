@@ -7,6 +7,7 @@ import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ public class UserStudyService {
     private final StudyRepository studyRepository;
     private final UserStudyRepository userStudyRepository;
 
+    @Transactional
     public void deleteUserStudyById(Long userId, Long studyId, User loginUser){
         User targetUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -36,6 +38,7 @@ public class UserStudyService {
         userStudyRepository.delete(userStudy);
     }
 
+    @Transactional
     public UserStudyGetResponseDto createUserStudy(Long userId, String token){
         //유효한 token인 지 검증 후 가입 처리
         User user = userRepository.findById(userId)

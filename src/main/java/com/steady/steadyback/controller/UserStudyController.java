@@ -17,7 +17,7 @@ public class UserStudyController {
 
     private final UserStudyService userStudyService;
 
-    //로그인 컨트롤러에서 로그인 정상 처리 -> 세션에서 dest 값을 읽어 이전 경로로 리다이렉트
+    //로그인 컨트롤러에서 로그인 정상 처리 -> 로그인 후 이전 경로로 리다이렉트
     @GetMapping("/join/{token}")
     public UserStudyGetResponseDto joinStudy(@PathVariable String token, @AuthenticationPrincipal User user){
         //토큰 유효하면 가입 처리 후 스터디 페이지로 이동.
@@ -31,4 +31,5 @@ public class UserStudyController {
         UserStudyResponseDto userStudyResponseDto = new UserStudyResponseDto(userId, studyId, "DELETED");
         return userStudyResponseDto;
     }
+
 }
