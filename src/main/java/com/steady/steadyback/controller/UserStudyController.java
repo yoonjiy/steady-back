@@ -17,10 +17,9 @@ public class UserStudyController {
 
     private final UserStudyService userStudyService;
 
-
     //로그인 컨트롤러에서 로그인 정상 처리 -> 세션에서 dest 값을 읽어 이전 경로로 리다이렉트
-    @GetMapping("/join")
-    public UserStudyGetResponseDto joinStudy(@PathParam("token") String token, @AuthenticationPrincipal User user){
+    @GetMapping("/join/{token}")
+    public UserStudyGetResponseDto joinStudy(@PathVariable String token, @AuthenticationPrincipal User user){
         //토큰 유효하면 가입 처리 후 스터디 페이지로 이동.
         return userStudyService.createUserStudy(user.getId(), token);
     }

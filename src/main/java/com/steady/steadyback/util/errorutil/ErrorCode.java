@@ -17,10 +17,10 @@ public enum ErrorCode {
 
     //404 NOT_FOUND : Resource를 찾을 수 없음
     MEMBER_NOT_FOUND(NOT_FOUND, "해당 유저 정보를 찾을 수 없습니다."),
-
     STUDY_NOT_FOUND(NOT_FOUND, "해당 스터디 정보를 찾을 수 없습니다."),
     STUDY_POST_NOT_FOUND(NOT_FOUND, "해당 스터디 포스트 정보를 찾을 수 없습니다."),
     REPORT_NOT_FOUND(NOT_FOUND, "해당 신고 정보를 찾을 수 없습니다."),
+    TOKEN_NOT_FOUND(NOT_FOUND, "존재하지 않는 토큰입니다."),
 
     UNAUTHORIZED_USER(UNAUTHORIZED, "권한이 없습니다."),
 
