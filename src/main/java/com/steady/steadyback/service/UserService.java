@@ -1,6 +1,5 @@
 package com.steady.steadyback.service;
 
-import com.steady.steadyback.config.Account;
 import com.steady.steadyback.domain.User;
 import com.steady.steadyback.domain.UserRepository;
 import com.steady.steadyback.dto.SignupRequestDto;
@@ -10,6 +9,7 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -69,9 +69,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public Account loadUserByUsername(String email) throws UsernameNotFoundException {
-        System.out.println(email);
-        return userRepository.findByEmail(email).map(User::toAccount)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("등록되지 않은 사용자입니다."));
 
     }

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,8 @@ public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
 
-    private String secretKey = "steadyday";
+    @Value("${jwt.secret")
+    private String secretKey;
 
     // 토큰 유효시간 3시간
     private long tokenValidTime = 180 * 60 * 1000L;
