@@ -36,6 +36,7 @@ public class UserStudyService {
         }
 
         userStudyRepository.delete(userStudy);
+        studyRepository.updatePeopleCount(study.getPeopleCount()-1, study.getId());
     }
 
     @Transactional
@@ -47,7 +48,9 @@ public class UserStudyService {
         if (study==null){
             throw new CustomException(ErrorCode.STUDY_NOT_FOUND);
         }
-        Long studyId = study.getId();
+        if (study.getPeopleCount()>=9){
+            throw new CustomException(ErrorCode.OVER_9_MEMBER);
+        }
 
         //이미 가입했다면
         UserStudy userAndStudy = userStudyRepository.findByUserAndStudy(user, study);
@@ -76,6 +79,7 @@ public class UserStudyService {
                 .build();
 
         UserStudy save = userStudyRepository.save(newUserStudy);
+        studyRepository.updatePeopleCount(study.getPeopleCount()+1, study.getId());
 
         return new UserStudyGetResponseDto(save);
     }
