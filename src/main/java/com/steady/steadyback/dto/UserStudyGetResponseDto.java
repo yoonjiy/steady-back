@@ -15,7 +15,7 @@ public class UserStudyGetResponseDto {
     private Integer score;
     private Integer lastFine;
     private Integer nowFine;
-    private Color color;
+    private String color;
 
     public UserStudyGetResponseDto(UserStudy userStudy){
         this.userId = userStudy.getUser().getId();
@@ -24,6 +24,6 @@ public class UserStudyGetResponseDto {
         this.score = userStudy.getScore();
         this.lastFine = userStudy.getLastFine();
         this.nowFine = userStudy.getNowFine();
-        this.color = userStudy.getColor();
+        this.color = userStudy.getColor().getValue();
     }
 }

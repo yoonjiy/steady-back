@@ -6,12 +6,14 @@ import com.steady.steadyback.dto.UserStudyGetResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserStudyService {
@@ -64,6 +66,7 @@ public class UserStudyService {
                 .stream()
                 .map(UserStudy::getColor)
                 .collect(Collectors.toList());
+
         //색 배정, 9가지 색 중 스터디원이 이미 가지지 않은 색으로
         Color color = null;
         for (Color value : Color.values()){
@@ -72,10 +75,15 @@ public class UserStudyService {
                 break;
             }
         }
+
         UserStudy newUserStudy = UserStudy.builder()
                 .user(user)
                 .study(study)
                 .color(color)
+                .lastFine(0)
+                .nowFine(0)
+                .leader(false)
+                .score(0)
                 .build();
 
         UserStudy save = userStudyRepository.save(newUserStudy);
