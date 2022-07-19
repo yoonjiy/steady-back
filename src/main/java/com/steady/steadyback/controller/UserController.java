@@ -33,8 +33,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto,
-                                  @RequestParam(defaultValue = "/") String redirectURL) {
+    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
         User user = userService.findUserByEmail(loginRequestDto.getEmail());
 
         if (!userRepository.existsByEmail(loginRequestDto.getEmail())) {
@@ -48,7 +47,6 @@ public class UserController {
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
                 .user(user)
                 .token(token)
-                .redirectURL(redirectURL)
                 .build();
         return loginResponseDto;
     }
