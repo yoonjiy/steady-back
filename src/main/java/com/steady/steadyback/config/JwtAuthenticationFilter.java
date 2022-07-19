@@ -1,6 +1,10 @@
 package com.steady.steadyback.config;
 
+import com.steady.steadyback.util.errorutil.ErrorCode;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -12,22 +16,31 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try{
+            String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+            log.info("token : {}", token);
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                log.info("authentication : {}", authentication.toString());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (ExpiredJwtException e) {
+            e.printStackTrace();
+            request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN);
+        } catch (JwtException e) {
+            e.printStackTrace();
+            request.setAttribute("exception", ErrorCode.INVALID_TOKEN);
         }
+
         chain.doFilter(request, response);
     }
+
 }
