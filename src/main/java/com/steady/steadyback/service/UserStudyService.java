@@ -33,7 +33,7 @@ public class UserStudyService {
         UserStudy userStudy = userStudyRepository.findByUserAndStudy(targetUser, study);
 
         //권한 확인, 로그인한 본인도 아니고 리더도 아니면 예외 처리
-        if (targetUser != loginUser && !userStudyRepository.findByUserAndStudy(loginUser, study).getLeader()){
+        if (userId!=loginUser.getId() && !userStudyRepository.findByUserAndStudy(loginUser, study).getLeader()){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
