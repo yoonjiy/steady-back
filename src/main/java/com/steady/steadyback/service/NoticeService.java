@@ -11,6 +11,9 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
@@ -30,5 +33,17 @@ public class NoticeService {
         NoticeResponseDto noticeResponseDto = new NoticeResponseDto(notice.getId(), notice.getStudy().getId(), notice.getContent());
 
         return noticeResponseDto;
+    }
+
+
+    public List<NoticeResponseDto> findNoticeListByStudyId(Long studyId) {
+
+        studyRepository.findById(studyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        return noticeRepository.findAllByStudyId(studyId)
+                .stream()
+                .map(notice -> new NoticeResponseDto(notice))
+                .collect(Collectors.toList());
     }
 }
