@@ -46,4 +46,20 @@ public class NoticeService {
                 .map(notice -> new NoticeResponseDto(notice))
                 .collect(Collectors.toList());
     }
+
+    public NoticeResponseDto findNoticeById(Long id) {
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTICE_NOT_FOUND));
+
+        return new NoticeResponseDto(notice);
+    }
+
+    public Long updateNotice(Long id, NoticeRequestDto noticeRequestDto) {
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTICE_NOT_FOUND));
+
+        notice.updateNotice(noticeRequestDto);
+        noticeRepository.save(notice);
+        return notice.getId();
+    }
 }

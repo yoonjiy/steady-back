@@ -22,6 +22,7 @@ public enum ErrorCode {
     STUDY_NOT_FOUND(NOT_FOUND, "해당 스터디 정보를 찾을 수 없습니다."),
     STUDY_POST_NOT_FOUND(NOT_FOUND, "해당 스터디 포스트 정보를 찾을 수 없습니다."),
     REPORT_NOT_FOUND(NOT_FOUND, "해당 신고 정보를 찾을 수 없습니다."),
+    NOTICE_NOT_FOUND(NOT_FOUND, "해당 공지사항 정보를 찾을 수 없습니다.")
 
     ;
 

@@ -26,4 +26,11 @@ public class NoticeController {
         return noticeService.findNoticeListByStudyId(studyId);
     }
 
+    @PostMapping("/{noticeId}")
+    public NoticeResponseDto updateNotice(@PathVariable Long noticeId, @RequestBody NoticeRequestDto noticeRequestDto) {
+        Long id = noticeService.updateNotice(noticeId, noticeRequestDto);
+        NoticeResponseDto noticeResponseDto = noticeService.findNoticeById(id);
+        return noticeResponseDto;
+    }
+
 }

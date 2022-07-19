@@ -1,5 +1,6 @@
 package com.steady.steadyback.domain;
 
+import com.steady.steadyback.dto.NoticeRequestDto;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,4 +32,8 @@ public class Notice {
         this.content = content;
     }
 
+    public void updateNotice(NoticeRequestDto noticeRequestDto) {
+        this.study = noticeRequestDto.getStudy();
+        this.content = noticeRequestDto.getContent();
+    }
 }
