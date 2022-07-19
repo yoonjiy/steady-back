@@ -17,7 +17,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
         //헤더에 올바른 토큰이 담겨있으나, 요청에 대한 권한이 없는 경우
-        response.sendRedirect("/users/login");
-
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.getWriter().println("{ \"message\" : \"" + "접근 권한이 없습니다."
+                + "\", \"status\" : \"" + HttpServletResponse.SC_FORBIDDEN + "\"\n}");
     }
 }

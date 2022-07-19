@@ -3,6 +3,7 @@ package com.steady.steadyback.util.errorutil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static org.springframework.http.HttpStatus.*;
 
