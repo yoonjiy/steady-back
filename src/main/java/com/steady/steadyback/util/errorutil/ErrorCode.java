@@ -30,8 +30,7 @@ public enum ErrorCode {
 
     USER_STUDY_ALREADY_EXISTS(CONFLICT, "이미 가입한 스터디원입니다."),
 
-    EXPIRED_TOKEN(UNAUTHORIZED, "토큰이 만료되었습니다."),
-    INVALID_TOKEN(UNAUTHORIZED, "토큰이 유효하지 않습니다."),
+    INVALID_TOKEN(UNAUTHORIZED, "토큰이 만료됐거나 유효하지 않습니다."),
     NON_LOGIN(UNAUTHORIZED, "로그인 후 이용 가능합니다.")
     ;
 

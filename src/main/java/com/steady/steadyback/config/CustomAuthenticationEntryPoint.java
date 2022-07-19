@@ -1,9 +1,7 @@
 package com.steady.steadyback.config;
 
 import com.steady.steadyback.util.errorutil.ErrorCode;
-import com.steady.steadyback.util.errorutil.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -28,25 +26,16 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         /**
          * 토큰 없는 경우
          */
-        if(exception == null) {
+        if(exception.equals(ErrorCode.NON_LOGIN.getDetail())) {
             errorCode = ErrorCode.NON_LOGIN;
             setResponse(response, errorCode, requestURI);
             return;
         }
 
         /**
-         * 토큰 만료된 경우
+         * 토큰이 만료됐거나 유효하지 않은 경우
          */
-        if(exception.equals(ErrorCode.EXPIRED_TOKEN)) {
-            errorCode = ErrorCode.EXPIRED_TOKEN;
-            setResponse(response, errorCode, requestURI);
-            return;
-        }
-
-        /**
-         * 토큰이 유효하지 않은 경우
-         */
-        if(exception.equals(ErrorCode.INVALID_TOKEN)) {
+        if(exception.equals(ErrorCode.INVALID_TOKEN.getDetail())) {
             errorCode = ErrorCode.INVALID_TOKEN;
             setResponse(response, errorCode, requestURI);
         }

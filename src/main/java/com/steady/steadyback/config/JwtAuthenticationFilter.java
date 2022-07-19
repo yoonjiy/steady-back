@@ -1,5 +1,6 @@
 package com.steady.steadyback.config;
 
+import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -21,24 +22,23 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        try{
-            String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-            log.info("token : {}", token);
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                log.info("authentication : {}", authentication.toString());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        } catch (ExpiredJwtException e) {
-            e.printStackTrace();
-            request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN);
-        } catch (JwtException e) {
-            e.printStackTrace();
-            request.setAttribute("exception", ErrorCode.INVALID_TOKEN);
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
+
+        if (!jwtTokenProvider.validateToken(token)){
+            request.setAttribute("exception", ErrorCode.INVALID_TOKEN.getDetail());
         }
+        if (token==null){
+            request.setAttribute("exception", ErrorCode.NON_LOGIN.getDetail());
+        }
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+
 
         chain.doFilter(request, response);
     }
