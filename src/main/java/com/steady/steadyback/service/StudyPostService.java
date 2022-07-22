@@ -40,11 +40,16 @@ public class StudyPostService {
 
     public StudyPostResponseDto createStudyPost(StudyPostRequestDto studyPostRequestDto, List<MultipartFile> multipartFiles) throws IOException {
 
-        //잘 안되는 부분
-        if(studyPostRequestDto.getLink().isEmpty()) {
-            if(multipartFiles.isEmpty())
-                new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
+        int imageCount = 0;
+        for (MultipartFile file : multipartFiles) {
+            if (!file.isEmpty())
+                imageCount++;
         }
+        if(studyPostRequestDto.getLink().isEmpty() && imageCount == 0) {
+            throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
+        }
+        if(imageCount > 2)
+            throw new CustomException(ErrorCode.OVER_2_IMAGES);
 
         User user = studyPostRequestDto.getUser();
         userRepository.findById(user.getId())
@@ -59,17 +64,17 @@ public class StudyPostService {
 
         List<String> uploadImageUrl = new ArrayList<>();
 
-        for (MultipartFile file: multipartFiles) {
-            //사진 없으면 계속 여기서 에러 뜸
-            File uploadFile = convert(file)  // 파일 변환할 수 없으면 에러
-                    .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
+        if(imageCount > 0) {
+            for (MultipartFile file : multipartFiles) {
+                //사진 없으면 계속 여기서 에러 뜸
+                File uploadFile = convert(file)  // 파일 변환할 수 없으면 에러
+                        .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
-            uploadImageUrl.add(upload(uploadFile, "static"));
+                uploadImageUrl.add(upload(uploadFile, "static"));
+            }
         }
 
-
         StudyPostResponseDto studyPostResponseDto = new StudyPostResponseDto(studyPost.getId(), studyPost.getUser().getId(), studyPost.getStudy().getId(), studyPost.getLink(), uploadImageUrl, studyPost.getDate());
-
 
         return studyPostResponseDto;
     }
