@@ -20,8 +20,13 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(NOT_FOUND, "해당 유저 정보를 찾을 수 없습니다."),
 
     STUDY_NOT_FOUND(NOT_FOUND, "해당 스터디 정보를 찾을 수 없습니다."),
-    STUDY_POST_NOT_FOUND(NOT_FOUND, "해당 스터디 포스트 정보를 찾을 수 없습니다."),
+    STUDY_POST_NOT_FOUND(NOT_FOUND, "해당 스터디 인증글 정보를 찾을 수 없습니다."),
     REPORT_NOT_FOUND(NOT_FOUND, "해당 신고 정보를 찾을 수 없습니다."),
+
+    STUDY_POST_IMAGE_NOT_FOUND(NOT_FOUND, "해당 이미지 정보를 찾을 수 없습니다."),
+
+    STUDY_POST_LIST_NOT_FOUND(NOT_FOUND, "인증글 정보를 찾을 수 없습니다."),
+
 
     ;
 
