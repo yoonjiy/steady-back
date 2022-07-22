@@ -91,4 +91,14 @@ public class UserStudyService {
 
         return new UserStudyGetResponseDto(save);
     }
+
+    public List<UserStudyFineResponseDto> getFineList(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        List<UserStudyFineResponseDto> fines = userStudyRepository.findByUser(user)
+                .stream()
+                .map(userStudy -> new UserStudyFineResponseDto(userStudy))
+                .collect(Collectors.toList());
+        return fines;
+    }
 }

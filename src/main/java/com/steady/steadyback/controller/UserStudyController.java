@@ -1,6 +1,7 @@
 package com.steady.steadyback.controller;
 
 import com.steady.steadyback.domain.User;
+import com.steady.steadyback.dto.UserStudyFineResponseDto;
 import com.steady.steadyback.dto.UserStudyGetResponseDto;
 import com.steady.steadyback.dto.UserStudyResponseDto;
 import com.steady.steadyback.service.UserStudyService;
@@ -9,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +32,12 @@ public class UserStudyController {
 
         UserStudyResponseDto userStudyResponseDto = new UserStudyResponseDto(userId, studyId, "DELETED");
         return userStudyResponseDto;
+    }
+
+    @GetMapping("/fines/{userId}")
+    public List<UserStudyFineResponseDto> getFineList(@PathVariable Long userId){
+        List<UserStudyFineResponseDto> fineList = userStudyService.getFineList(userId);
+        return fineList;
     }
 
 }
