@@ -4,8 +4,10 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -29,11 +31,23 @@ public class StudyPost {
     @Column(length = 100)
     private String link;
 
+    @NotNull
+    @Column
+    @CreatedDate
+    private LocalDateTime date;
+
+    @PrePersist
+    public void createDate(){
+        this.date = LocalDateTime.now();
+    }   // local 시간으로 저장
+
     @Builder
-    public StudyPost(Long id, User user, Study study, String link) {
+    public StudyPost(Long id, User user, Study study, String link, LocalDateTime date) {
         this.id = id;
         this.user = user;
         this.study = study;
         this.link = link;
+        this.date = date;
     }
+
 }
