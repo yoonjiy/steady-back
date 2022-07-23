@@ -10,9 +10,9 @@ public enum Color {
     ORANGE("FFA500"),
     YELLOW("FFD600"),
     GREEN("26C983"),
-    LIGHT_GREEN("9BE23F"),
+    L_GREEN("9BE23F"),
     BLUE("286CCF"),
-    LIGHT_BLUE("43BBFF"),
+    L_BLUE("43BBFF"),
     PINK("FF5CEF"),
     PURPLE("934CFF");
 
