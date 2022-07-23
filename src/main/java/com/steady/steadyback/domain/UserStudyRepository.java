@@ -17,4 +17,9 @@ public interface UserStudyRepository extends JpaRepository<UserStudy, UserStudyI
     @Modifying
     @Query("update UserStudy u set u.lastFine = :lastFine , u.nowFine = 0  where u.user.id=:userId and u.study.id=:studyId")
     public void updateLastFine(@Param("lastFine") Integer lastFine, @Param("userId") Long userId, @Param("studyId") Long studyId);
+
+    @Modifying
+    @Query("update UserStudy u set u.score = :score where u.user.id=:userId and u.study.id=:studyId")
+    public void updateScore(@Param("userId") Long userId, @Param("studyId") Long studyId, @Param("score") Integer score);
+
 }

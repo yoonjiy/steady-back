@@ -14,10 +14,19 @@ public class SchedulerService {
 
     @Transactional
     @Scheduled(cron = "0 0 0 ? * MON")
-    public void calculateFine(){
+    public void calculateFine() {
         //lastFine update, nowFine 0으로 초기화
         userStudyRepository.findAll()
                 .stream()
                 .forEach(userStudy -> userStudyRepository.updateLastFine(userStudy.refreshNowFineAndGetLastFine(), userStudy.getUser().getId(), userStudy.getStudy().getId()));
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 ? * MON")
+    public void resetScore() {
+        userStudyRepository.findAll()
+                .stream()
+                .forEach(userStudy -> userStudyRepository.updateScore(userStudy.getUser().getId(), userStudy.getStudy().getId(), 0));
+
     }
 }
