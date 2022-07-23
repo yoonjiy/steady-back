@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface UserStudyRepository extends JpaRepository<UserStudy, UserStudyID> {
     public UserStudy findByUserAndStudy(User user, Study study);
-    public List<UserStudy> findByStudy(Study study);
     public List<UserStudy> findByUser(User user);
+    public List<UserStudy> findByStudy(Study study);
 
     @Modifying
     @Query("update UserStudy u set u.lastFine = :lastFine , u.nowFine = 0  where u.user.id=:userId and u.study.id=:studyId")
