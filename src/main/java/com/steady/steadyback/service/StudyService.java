@@ -1,7 +1,6 @@
 package com.steady.steadyback.service;
 
-import com.steady.steadyback.domain.Study;
-import com.steady.steadyback.domain.StudyRepository;
+import com.steady.steadyback.domain.*;
 import com.steady.steadyback.dto.StudyRequestDto;
 import com.steady.steadyback.dto.StudyGetResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
