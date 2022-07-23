@@ -43,10 +43,8 @@ public class UserStudyService {
     }
 
     @Transactional
-    public UserStudyGetResponseDto createUserStudy(Long userId, String token){
+    public UserStudyGetResponseDto createUserStudy(User user, String token){
         //유효한 token인 지 검증 후 가입 처리
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         Study study = studyRepository.findByUuid(token);
         if (study==null){
             throw new CustomException(ErrorCode.STUDY_NOT_FOUND);
@@ -93,9 +91,7 @@ public class UserStudyService {
         return new UserStudyGetResponseDto(save);
     }
 
-    public List<UserStudyFineResponseDto> getFineList(Long userId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+    public List<UserStudyFineResponseDto> getFineList(User user){
         List<UserStudyFineResponseDto> fines = userStudyRepository.findByUser(user)
                 .stream()
                 .map(userStudy -> new UserStudyFineResponseDto(userStudy))
