@@ -27,7 +27,7 @@ public enum ErrorCode {
     STUDY_POST_IMAGE_NOT_FOUND(NOT_FOUND, "해당 이미지 정보를 찾을 수 없습니다."),
     STUDY_POST_LIST_NOT_FOUND(NOT_FOUND, "인증글 정보를 찾을 수 없습니다."),
     TOKEN_NOT_FOUND(NOT_FOUND, "존재하지 않는 토큰입니다."),
-    NOTICE_NOT_FOUND(NOT_FOUND, "해당 공지사항 정보를 찾을 수 없습니다.")
+    NOTICE_NOT_FOUND(NOT_FOUND, "해당 공지사항 정보를 찾을 수 없습니다."),
 
     UNAUTHORIZED_USER(UNAUTHORIZED, "권한이 없습니다."),
     INVALID_TOKEN(UNAUTHORIZED, "토큰이 만료됐거나 유효하지 않습니다."),
