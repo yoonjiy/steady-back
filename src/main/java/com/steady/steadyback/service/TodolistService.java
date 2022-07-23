@@ -20,18 +20,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TodolistService {
 
-    private final UserRepository userRepository;
     private final UserStudyRepository userStudyRepository;
     private final StudyPostRepository studyPostRepository;
 
     //오늘의 투두리스트. 스터디 이름, 시, 분(study)
     @Transactional
-    public List<TodolistResponseDto> findTodolist(Long userId) {
+    public List<TodolistResponseDto> findTodolist(User user) {
         List<TodolistResponseDto> todolist = new ArrayList<>();
 
-        //유저별 스터디 가져오기 -> (로그인 유저로)
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        //유저별 스터디 가져오기
         List<UserStudy> userStudyList = userStudyRepository.findByUser(user);
 
         for (UserStudy userStudy : userStudyList) {
