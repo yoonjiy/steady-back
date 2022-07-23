@@ -3,6 +3,7 @@ package com.steady.steadyback.service;
 import com.steady.steadyback.domain.*;
 import com.steady.steadyback.dto.UserStudyFineResponseDto;
 import com.steady.steadyback.dto.UserStudyGetResponseDto;
+import com.steady.steadyback.dto.UserStudyRankingResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -100,5 +101,16 @@ public class UserStudyService {
                 .map(userStudy -> new UserStudyFineResponseDto(userStudy))
                 .collect(Collectors.toList());
         return fines;
+    }
+
+    public List<UserStudyRankingResponseDto> getRankingList(Long studyId){
+        Study study = studyRepository.findById(studyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+        List<UserStudyRankingResponseDto> rankingList = userStudyRepository.findByStudy(study)
+                .stream()
+                .map(userStudy -> new UserStudyRankingResponseDto(userStudy))
+                .sorted()
+                .collect(Collectors.toList());
+        return rankingList;
     }
 }

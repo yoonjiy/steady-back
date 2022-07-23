@@ -3,6 +3,7 @@ package com.steady.steadyback.controller;
 import com.steady.steadyback.domain.User;
 import com.steady.steadyback.dto.UserStudyFineResponseDto;
 import com.steady.steadyback.dto.UserStudyGetResponseDto;
+import com.steady.steadyback.dto.UserStudyRankingResponseDto;
 import com.steady.steadyback.dto.UserStudyResponseDto;
 import com.steady.steadyback.service.UserStudyService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,12 @@ public class UserStudyController {
     public List<UserStudyFineResponseDto> getFineList(@PathVariable Long userId){
         List<UserStudyFineResponseDto> fineList = userStudyService.getFineList(userId);
         return fineList;
+    }
+
+    @GetMapping("/ranking/{studyId}")
+    public List<UserStudyRankingResponseDto> getRankingList(@PathVariable Long studyId){
+        List<UserStudyRankingResponseDto> rankingList = userStudyService.getRankingList(studyId);
+        return rankingList;
     }
 
 }
