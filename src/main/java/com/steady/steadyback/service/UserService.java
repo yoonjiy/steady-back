@@ -75,5 +75,14 @@ public class UserService implements UserDetailsService {
 
     }
 
+    @Transactional
+    public UserResponseDto updateUser(Long userId, SignupRequestDto updateRequestDto){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        user.update(updateRequestDto.getName(), updateRequestDto.getNickname(), updateRequestDto.getEmail(), updateRequestDto.getPassword(), updateRequestDto.getPhone());
+
+        return new UserResponseDto(userRepository.save(user));
+    }
+
 
 }

@@ -89,4 +89,12 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void update(String name,String nickname, String email, String password, String phone){
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+    }
+
 }
