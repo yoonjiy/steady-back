@@ -7,6 +7,7 @@ import com.steady.steadyback.dto.StudyGetResponseDto;
 import com.steady.steadyback.service.StudyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,8 +32,8 @@ public class StudyController {
     }
 
     @PostMapping()
-    public ResponseEntity<StudyResponseDto> createStudy(@RequestBody StudyRequestDto studyRequestDto) {
-        Long studyId = studyService.createStudy(studyRequestDto);
+    public ResponseEntity<StudyResponseDto> createStudy(@RequestBody StudyRequestDto studyRequestDto, @AuthenticationPrincipal User user) {
+        Long studyId = studyService.createStudy(studyRequestDto, user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(studyId)
