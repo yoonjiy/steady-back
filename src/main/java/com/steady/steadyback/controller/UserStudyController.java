@@ -3,6 +3,7 @@ package com.steady.steadyback.controller;
 import com.steady.steadyback.domain.User;
 import com.steady.steadyback.dto.UserStudyFineResponseDto;
 import com.steady.steadyback.dto.UserStudyGetResponseDto;
+import com.steady.steadyback.dto.UserStudyRankingResponseDto;
 import com.steady.steadyback.dto.UserStudyResponseDto;
 import com.steady.steadyback.service.UserStudyService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class UserStudyController {
     @GetMapping("/join/{token}")
     public UserStudyGetResponseDto joinStudy(@PathVariable String token, @AuthenticationPrincipal User user){
         //토큰 유효하면 가입 처리 후 스터디 페이지로 이동.
-        return userStudyService.createUserStudy(user.getId(), token);
+        return userStudyService.createUserStudy(user, token);
     }
 
     @DeleteMapping("/{userId}/leave/{studyId}")
@@ -34,10 +35,16 @@ public class UserStudyController {
         return userStudyResponseDto;
     }
 
-    @GetMapping("/fines/{userId}")
-    public List<UserStudyFineResponseDto> getFineList(@PathVariable Long userId){
-        List<UserStudyFineResponseDto> fineList = userStudyService.getFineList(userId);
+    @GetMapping("/fines")
+    public List<UserStudyFineResponseDto> getFineList(@AuthenticationPrincipal User user){
+        List<UserStudyFineResponseDto> fineList = userStudyService.getFineList(user);
         return fineList;
+    }
+
+    @GetMapping("/ranking/{studyId}")
+    public List<UserStudyRankingResponseDto> getRankingList(@PathVariable Long studyId){
+        List<UserStudyRankingResponseDto> rankingList = userStudyService.getRankingList(studyId);
+        return rankingList;
     }
 
 }

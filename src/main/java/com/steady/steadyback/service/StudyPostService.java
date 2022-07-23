@@ -1,15 +1,20 @@
 package com.steady.steadyback.service;
 
+
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.steady.steadyback.domain.*;
 import com.steady.steadyback.dto.StudyPostImageRequestDto;
 import com.steady.steadyback.dto.StudyPostRequestDto;
+
+import com.steady.steadyback.dto.StudyPostImageResponseDto;
+
 import com.steady.steadyback.dto.StudyPostResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

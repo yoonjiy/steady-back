@@ -1,5 +1,8 @@
 package com.steady.steadyback.dto;
 
+import com.steady.steadyback.domain.StudyPost;
+import com.steady.steadyback.domain.StudyPostImage;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

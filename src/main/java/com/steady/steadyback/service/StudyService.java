@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudyService {
     private final StudyRepository studyRepository;
+    private final UserRepository userRepository;
+    private final UserStudyRepository userStudyRepository;
 
     public StudyGetResponseDto findStudyById(Long id) {
         Study study = studyRepository.findById(id)
@@ -24,7 +26,7 @@ public class StudyService {
         return new StudyGetResponseDto(study);
     }
 
-    public Long createStudy(StudyRequestDto studyRequestDto) {
+    public Long createStudy(StudyRequestDto studyRequestDto, User user) {
         if(studyRequestDto.getName().isEmpty()) {
             throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
         }
@@ -36,6 +38,18 @@ public class StudyService {
 
         Study study = studyRequestDto.toEntity();
         studyRepository.save(study);
+
+        UserStudy userStudy = UserStudy.builder()
+                .user(user)
+                .study(study)
+                .leader(true)
+                .score(0)
+                .nowFine(0)
+                .lastFine(0)
+                .color(Color.values()[(int) (Math.random() * 9)])
+                .build();
+
+        userStudyRepository.save(userStudy);
 
         return study.getId();
     }

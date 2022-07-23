@@ -30,5 +30,5 @@ public class StudyPostImage {
         this.imageUrl = imageUrl;
     }
 
-
 }
+

@@ -3,6 +3,7 @@ package com.steady.steadyback.service;
 import com.steady.steadyback.domain.*;
 import com.steady.steadyback.dto.UserStudyFineResponseDto;
 import com.steady.steadyback.dto.UserStudyGetResponseDto;
+import com.steady.steadyback.dto.UserStudyRankingResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +43,8 @@ public class UserStudyService {
     }
 
     @Transactional
-    public UserStudyGetResponseDto createUserStudy(Long userId, String token){
+    public UserStudyGetResponseDto createUserStudy(User user, String token){
         //유효한 token인 지 검증 후 가입 처리
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         Study study = studyRepository.findByUuid(token);
         if (study==null){
             throw new CustomException(ErrorCode.STUDY_NOT_FOUND);
@@ -92,13 +91,22 @@ public class UserStudyService {
         return new UserStudyGetResponseDto(save);
     }
 
-    public List<UserStudyFineResponseDto> getFineList(Long userId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+    public List<UserStudyFineResponseDto> getFineList(User user){
         List<UserStudyFineResponseDto> fines = userStudyRepository.findByUser(user)
                 .stream()
                 .map(userStudy -> new UserStudyFineResponseDto(userStudy))
                 .collect(Collectors.toList());
         return fines;
+    }
+
+    public List<UserStudyRankingResponseDto> getRankingList(Long studyId){
+        Study study = studyRepository.findById(studyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+        List<UserStudyRankingResponseDto> rankingList = userStudyRepository.findByStudy(study)
+                .stream()
+                .map(userStudy -> new UserStudyRankingResponseDto(userStudy))
+                .sorted()
+                .collect(Collectors.toList());
+        return rankingList;
     }
 }
