@@ -49,8 +49,15 @@ public class StudyController {
         return studyResponseDto;
     }
 
-    @PutMapping("/{studyId}")
-    public StudyGetResponseDto updateStudy(@PathVariable Long studyId, @RequestBody StudyRequestDto studyRequestDto) {
+    @PutMapping("/{studyId}/descriptions")
+    public StudyGetResponseDto updateStudyDescription(@PathVariable Long studyId, @RequestBody StudyRequestDto studyRequestDto) {
+        Long id = studyService.updateStudyDescription(studyId, studyRequestDto);
+        StudyGetResponseDto studyGetResponseDto = studyService.findStudyById(id);
+        return studyGetResponseDto;
+    }
+
+    @PutMapping("/{studyId}/rules")
+    public StudyGetResponseDto updateStudyRule(@PathVariable Long studyId, @RequestBody StudyRequestDto studyRequestDto) {
         Long id = studyService.updateStudyRule(studyId, studyRequestDto);
         StudyGetResponseDto studyGetResponseDto = studyService.findStudyById(id);
         return studyGetResponseDto;
