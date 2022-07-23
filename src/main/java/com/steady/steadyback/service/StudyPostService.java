@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.steady.steadyback.domain.*;
+import com.steady.steadyback.dto.StudyPostImageRequestDto;
 import com.steady.steadyback.dto.StudyPostRequestDto;
 import com.steady.steadyback.dto.StudyPostResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
@@ -18,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +35,8 @@ public class StudyPostService {
     private final StudyRepository studyRepository;
     private final UserRepository userRepository;
     private final StudyPostRepository studyPostRepository;
+    private final StudyPostImageRepository studyPostImageRepository;
+    private final UserStudyRepository userStudyRepository;
 
     private final AmazonS3Client amazonS3Client;
 
@@ -62,19 +67,78 @@ public class StudyPostService {
 
         StudyPost studyPost = studyPostRepository.save(studyPostRequestDto.toEntity());
 
+        UserStudy userStudy = userStudyRepository.findByUserAndStudy(user, study);
+
+        //요일 구하기
+        LocalDateTime date = studyPost.getDate();
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        int dayOfWeekNumber = dayOfWeek.getValue(); //월:1, 화:2, ... , 일:7
+
+        boolean check = true;
+        String studyPostSort;
+
+        switch(dayOfWeekNumber){
+            case 1:
+                check = study.getMon();
+                break ;
+            case 2:
+                check = study.getTue();
+                break ;
+            case 3:
+                check = study.getWed();
+                break ;
+            case 4:
+                check = study.getThu();
+                break ;
+            case 5:
+                check = study.getFri();
+                break ;
+            case 6:
+                check = study.getSat();
+                break ;
+            case 7:
+                check = study.getSun();
+                break ;
+
+        }
+
+        //글 쓴 날이 인증요일이다
+        if(check) {
+            if (date.getHour() < study.getHour() || (date.getHour() == study.getHour() && date.getMinute() < study.getMinute())) {
+                studyPostSort = "인증 성공";
+            }
+            else{
+                userStudy.addLateMoney();
+                studyPostSort = "지각";
+            }
+        }
+        else {
+            if(userStudy.getNowFine() > 0) {
+                userStudy.subtractMoney();
+                userStudy.addLateMoney();
+                studyPostSort = "보충 인증 ";
+            }
+            else {
+                studyPostSort = "추가 인증 ";
+            }
+        }
+
         List<String> uploadImageUrl = new ArrayList<>();
 
         if(imageCount > 0) {
             for (MultipartFile file : multipartFiles) {
-                //사진 없으면 계속 여기서 에러 뜸
                 File uploadFile = convert(file)  // 파일 변환할 수 없으면 에러
                         .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
-                uploadImageUrl.add(upload(uploadFile, "static"));
+                String imageUrl = upload(uploadFile, "static");
+                uploadImageUrl.add(imageUrl); //uploadImageUrl은 studyPostResponseDto에 전달
+
+                //StudyPostImage 테이블에 넘겨줌
+                StudyPostImageRequestDto studyPostImageRequestDto = new StudyPostImageRequestDto(studyPost, imageUrl);
+                StudyPostImage studyPostImage = studyPostImageRepository.save(studyPostImageRequestDto.toEntity());
             }
         }
-
-        StudyPostResponseDto studyPostResponseDto = new StudyPostResponseDto(studyPost.getId(), studyPost.getUser().getId(), studyPost.getStudy().getId(), studyPost.getLink(), uploadImageUrl, studyPost.getDate());
+        StudyPostResponseDto studyPostResponseDto = new StudyPostResponseDto(studyPost.getId(), studyPost.getUser().getId(), studyPost.getStudy().getId(), studyPost.getLink(), uploadImageUrl, studyPost.getDate(), userStudy.getNowFine(), studyPostSort);
 
         return studyPostResponseDto;
     }

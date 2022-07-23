@@ -24,6 +24,9 @@ public class StudyPostResponseDto {
 
     private LocalDateTime date;
 
+    private Integer nowFine;
+
+    private String studyPostSort;
 
 }
 

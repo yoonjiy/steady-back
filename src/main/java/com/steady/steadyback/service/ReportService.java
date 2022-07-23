@@ -78,7 +78,7 @@ public class ReportService {
         Study study = report.getStudyPost().getStudy();
 
         UserStudy userStudy = userStudyRepository.findByUserAndStudy(canceledUser, study);
-        userStudy.addNowFine();
+        userStudy.addMoney();
         userStudyRepository.save(userStudy);
 
         reportRepository.deleteById(reportId);
