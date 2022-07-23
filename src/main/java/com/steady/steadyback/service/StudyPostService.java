@@ -123,6 +123,8 @@ public class StudyPostService {
             }
         }
 
+        userStudyRepository.save(userStudy);
+
         List<String> uploadImageUrl = new ArrayList<>();
 
         if(imageCount > 0) {
