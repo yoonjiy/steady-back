@@ -107,9 +107,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserResponseDto updateUser(@PathVariable Long userId, @RequestBody SignupRequestDto updateRequestDto){
-        if (userService.checkDuplicateUsers(updateRequestDto))
-            throw new CustomException(ErrorCode.CANNOT_DUPLICATE_EMAIL);
+    public UserUpdateResponseDto updateUser(@PathVariable Long userId, @RequestBody UserUpdateRequestDto updateRequestDto){
         updateRequestDto.encryptPassword(passwordEncoder);
         return userService.updateUser(userId, updateRequestDto);
     }
