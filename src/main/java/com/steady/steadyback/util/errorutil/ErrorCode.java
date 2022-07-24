@@ -15,6 +15,7 @@ public enum ErrorCode {
     CANNOT_EMPTY_CONTENT(BAD_REQUEST, "내용이 비어있을 수 없습니다."),
     BIGGER_LATE_MONEY(BAD_REQUEST, "지각비가 결석비를 초과할 수 없습니다."),
     INVALID_VALUE(BAD_REQUEST, "올바르지 않은 값입니다."),
+    OVER_2_IMAGES(BAD_REQUEST, "사진은 최대 2장까지 업로드 가능합니다."),
     CANNOT_DUPLICATE_EMAIL(BAD_REQUEST, "이미 가입된 이메일입니다"),
     INCORRECT_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     OVER_9_MEMBER(BAD_REQUEST, "스터디원은 최대 9명까지 추가 가능합니다."),

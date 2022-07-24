@@ -43,10 +43,21 @@ public class UserStudy implements Serializable {
     @NotNull
     private Color color;
 
-    public Integer addNowFine() {
+    public Integer addMoney() { //repotyService에서 사용
         this.nowFine += this.study.getMoney();
         return this.nowFine;
     }
+
+    public Integer addLateMoney() {
+        this.nowFine += this.study.getLateMoney();
+        return this.nowFine;
+    }
+
+    public Integer subtractMoney() {
+        this.nowFine -= this.study.getMoney();
+        return this.nowFine;
+    }
+
 
     public Integer refreshNowFineAndGetLastFine(){
         this.lastFine = this.getNowFine();
