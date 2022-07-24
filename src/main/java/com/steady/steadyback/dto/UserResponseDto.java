@@ -29,7 +29,6 @@ public class UserResponseDto {
         this.userId = user.getId();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
-        this.password = user.getPassword();
         this.phone = user.getPhone();
         this.name = user.getName();
         this.message= message ;

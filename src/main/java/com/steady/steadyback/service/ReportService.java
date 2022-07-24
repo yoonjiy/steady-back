@@ -21,25 +21,31 @@ public class ReportService {
     private final StudyRepository studyRepository;
     private final UserStudyRepository userStudyRepository;
 
-    public ReportResponseDto createReport(ReportRequestDto reportRequestDto) {
-        StudyPost studyPost = reportRequestDto.getStudyPost();
-        studyPostRepository.findById(studyPost.getId())
+    public ReportResponseDto createReport(ReportRequestDto reportRequestDto, User user) {
+        StudyPost studyPost = studyPostRepository.findById(reportRequestDto.getStudyPostId())
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_POST_NOT_FOUND));
 
-        User user = reportRequestDto.getUser();
-        studyPostRepository.findById(user.getId())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        UserStudy userStudy = userStudyRepository.findByUserAndStudy(user, studyPost.getStudy())
+                .orElseThrow(() -> new CustomException(ErrorCode.INFO_NOT_FOUNT));
 
-        Report report = reportRepository.save(reportRequestDto.toEntity());
+        Report report = reportRepository.save(Report.builder()
+                .user(user)
+                .studyPost(studyPost)
+                .build()
+        );
 
         ReportResponseDto reportResponseDto = new ReportResponseDto(report.getId(), report.getUser().getId(), report.getStudyPost().getId());
 
         return reportResponseDto;
     }
 
-    public List<ReportResponseDto> findReportListByStudyId(Long studyId) {
+    public List<ReportResponseDto> findReportListByStudyId(Long studyId, User user) {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         return reportRepository.findAllByStudyPost_Study(study)
                 .stream()
@@ -54,30 +60,49 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
-    public ReportResponseDto findReportById(Long reportId) {
+    public ReportResponseDto findReportById(Long reportId, User user) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
+
+        Study study = report.getStudyPost().getStudy();
+
+        if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         ReportResponseDto reportResponseDto = new ReportResponseDto(report);
         return reportResponseDto;
     }
 
-    public String deleteReportById(Long reportId) {
+    public String deleteReportById(Long reportId, User user) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
+
+        Study study = report.getStudyPost().getStudy();
+
+        if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         reportRepository.deleteById(reportId);
         return "SUCCESS";
     }
 
-    public String cancelReportById(Long reportId) {
+    public String cancelReportById(Long reportId, User user) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
 
-        User canceledUser = report.getStudyPost().getUser();
         Study study = report.getStudyPost().getStudy();
 
-        UserStudy userStudy = userStudyRepository.findByUserAndStudy(canceledUser, study);
+        if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+
+        User canceledUser = report.getStudyPost().getUser();
+
+        UserStudy userStudy = userStudyRepository.findByUserAndStudy(canceledUser, study)
+                .orElseThrow(() -> new CustomException(ErrorCode.INFO_NOT_FOUNT));
+
         userStudy.addNowFine();
         userStudyRepository.save(userStudy);
 

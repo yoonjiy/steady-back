@@ -93,10 +93,9 @@ public class UserController {
     @PostMapping("/findPw")
     public UserFindResponseDto findPwPOST(@RequestBody Map<String,String> param) {
         String email = param.get("email");
-        User user= userRepository.findByEmail(email);
-        if(user==null) {
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
+        User user= userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
         return userService.findPw(user);
     }
 

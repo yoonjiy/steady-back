@@ -31,10 +31,14 @@ public class UserStudyService {
         Study study = studyRepository.findById(studyId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-        UserStudy userStudy = userStudyRepository.findByUserAndStudy(targetUser, study);
+        UserStudy userStudy = userStudyRepository.findByUserAndStudy(targetUser, study)
+                .orElseThrow(() -> new CustomException(ErrorCode.INFO_NOT_FOUNT));
+
+        UserStudy loginUserStudy = userStudyRepository.findByUserAndStudy(loginUser, study)
+                .orElseThrow(() -> new CustomException(ErrorCode.INFO_NOT_FOUNT));
 
         //권한 확인, 로그인한 본인도 아니고 리더도 아니면 예외 처리
-        if (userId!=loginUser.getId() && !userStudyRepository.findByUserAndStudy(loginUser, study).getLeader()){
+        if (userId!=loginUser.getId() && !loginUserStudy.getLeader()){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
@@ -54,8 +58,7 @@ public class UserStudyService {
         }
 
         //이미 가입했다면
-        UserStudy userAndStudy = userStudyRepository.findByUserAndStudy(user, study);
-        if (userAndStudy!=null){
+        if (userStudyRepository.existsByUserAndStudy(user, study)){
            throw new CustomException(ErrorCode.USER_STUDY_ALREADY_EXISTS);
         }
 

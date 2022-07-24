@@ -44,9 +44,6 @@ public class User implements UserDetails {
     @Column
     private String role;
 
-    @Column
-    private String role;
-
     @Builder
 
     public User(String name,String nickname, String email, String password, String phone) {
