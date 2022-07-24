@@ -33,7 +33,7 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(UNAUTHORIZED, "권한이 없습니다."),
     INVALID_TOKEN(UNAUTHORIZED, "토큰이 만료됐거나 유효하지 않습니다."),
     NON_LOGIN(UNAUTHORIZED, "로그인 후 이용 가능합니다."),
-
+    INFO_NOT_FOUNT(NOT_FOUND, "해당 정보를 찾을 수 없습니다."),
     USER_STUDY_ALREADY_EXISTS(CONFLICT, "이미 가입한 스터디원입니다.")
     ;
 

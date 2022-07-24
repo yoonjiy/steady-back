@@ -45,23 +45,23 @@ public class StudyController {
     }
 
     @DeleteMapping("/{studyId}")
-    public StudyResponseDto deleteStudy(@PathVariable Long studyId) {
-        studyService.deleteStudyById(studyId);
+    public StudyResponseDto deleteStudy(@PathVariable Long studyId, @AuthenticationPrincipal User user) {
+        studyService.deleteStudyById(studyId, user);
         StudyResponseDto studyResponseDto = new StudyResponseDto(studyId, "SUCCESS");
 
         return studyResponseDto;
     }
 
     @PutMapping("/{studyId}/descriptions")
-    public StudyGetResponseDto updateStudyDescription(@PathVariable Long studyId, @RequestBody StudyRequestDto studyRequestDto) {
-        Long id = studyService.updateStudyDescription(studyId, studyRequestDto);
+    public StudyGetResponseDto updateStudyDescription(@PathVariable Long studyId, @RequestBody StudyRequestDto studyRequestDto, @AuthenticationPrincipal User user) {
+        Long id = studyService.updateStudyDescription(studyId, studyRequestDto, user);
         StudyGetResponseDto studyGetResponseDto = studyService.findStudyById(id);
         return studyGetResponseDto;
     }
 
     @PutMapping("/{studyId}/rules")
-    public StudyGetResponseDto updateStudyRule(@PathVariable Long studyId, @RequestBody StudyRequestDto studyRequestDto) {
-        Long id = studyService.updateStudyRule(studyId, studyRequestDto);
+    public StudyGetResponseDto updateStudyRule(@PathVariable Long studyId, @RequestBody StudyRequestDto studyRequestDto, @AuthenticationPrincipal User user) {
+        Long id = studyService.updateStudyRule(studyId, studyRequestDto, user);
         StudyGetResponseDto studyGetResponseDto = studyService.findStudyById(id);
         return studyGetResponseDto;
     }

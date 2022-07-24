@@ -1,5 +1,7 @@
 package com.steady.steadyback.domain;
 
+import com.steady.steadyback.dto.StudyRequestDto;
+import com.steady.steadyback.dto.UserRequestDto;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,13 +45,30 @@ public class User implements UserDetails {
     private String role;
 
     @Builder
+
     public User(String name,String nickname, String email, String password, String phone) {
         this.name = name;
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.phone = phone;
+        this.name = name;
         this.role = "USER";
+
+    }
+
+    public void updateUser(UserRequestDto userRequestDto) {
+        //비번 암호화
+        this.nickname = userRequestDto.getNickname();
+        this.email = userRequestDto.getEmail();
+        this.password = userRequestDto.getPassword();
+        this.phone = userRequestDto.getPhone();
+        this.name = userRequestDto.getName();
+        this.role = "USER";
+    }
+
+    public void updatePw (String pw) {
+        this.password= pw;
     }
 
 
@@ -87,6 +106,14 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void update(String name,String nickname, String email, String password, String phone){
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
     }
 
 }

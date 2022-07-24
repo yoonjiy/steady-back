@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudyService {
     private final StudyRepository studyRepository;
-    private final UserRepository userRepository;
     private final UserStudyRepository userStudyRepository;
 
     public StudyGetResponseDto findStudyById(Long id) {
@@ -61,24 +60,37 @@ public class StudyService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteStudyById(Long id) {
-        studyRepository.findById(id)
+    public void deleteStudyById(Long id, User user) {
+        Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+
         studyRepository.deleteById(id);
     }
 
-    public Long updateStudyDescription(Long id, StudyRequestDto studyRequestDto) {
+    public Long updateStudyDescription(Long id, StudyRequestDto studyRequestDto, User user) {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         study.updateDescription(studyRequestDto);
         studyRepository.save(study);
         return study.getId();
     }
 
-    public Long updateStudyRule(Long id, StudyRequestDto studyRequestDto) {
+    public Long updateStudyRule(Long id, StudyRequestDto studyRequestDto, User user) {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         checkRule(studyRequestDto);
 

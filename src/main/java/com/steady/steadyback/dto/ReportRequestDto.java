@@ -13,14 +13,5 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportRequestDto {
-    private User user;
-    private StudyPost studyPost;
-
-    public Report toEntity()  {
-        return Report.builder()
-                .user(user)
-                .studyPost(studyPost)
-                .build()
-                ;
-    }
+    private Long studyPostId;
 }
