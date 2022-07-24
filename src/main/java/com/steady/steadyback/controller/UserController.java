@@ -70,4 +70,12 @@ public class UserController {
         return userService.findUserList();
     }
 
+    @PatchMapping("/{userId}")
+    public UserResponseDto updateUser(@PathVariable Long userId, @RequestBody SignupRequestDto updateRequestDto){
+        if (userService.checkDuplicateUsers(updateRequestDto))
+            throw new CustomException(ErrorCode.CANNOT_DUPLICATE_EMAIL);
+        updateRequestDto.encryptPassword(passwordEncoder);
+        return userService.updateUser(userId, updateRequestDto);
+    }
+
 }
