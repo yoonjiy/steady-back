@@ -118,10 +118,12 @@ public class StudyPostService {
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
 
-        StudyPost studyPost = studyPostRepository.save(studyPostRequestDto.toEntity());
-
         UserStudy userStudy = userStudyRepository.findByUserAndStudy(user, study)
                 .orElseThrow(() -> new CustomException(ErrorCode.INFO_NOT_FOUNT));
+
+        study = userStudy.getStudy();
+
+        StudyPost studyPost = studyPostRepository.save(studyPostRequestDto.toEntity());
 
         //요일 구하기
         LocalDateTime date = studyPost.getDate();
