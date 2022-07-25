@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface StudyPostImageRepository extends JpaRepository<StudyPostImage, Long> {
     List<StudyPostImage> findByStudyPost(StudyPost studyPost);
+    List<StudyPostImage> findByStudyPostId(Long studyPostId);
 }

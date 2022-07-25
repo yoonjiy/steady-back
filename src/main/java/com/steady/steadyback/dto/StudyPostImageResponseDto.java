@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StudyPostImageResponseDto {
     private Long StudyPostImageId;
-    private String imageUrl;
+    private String imageUrl ;
 
     public StudyPostImageResponseDto(StudyPostImage studyPostImage) {
         this.StudyPostImageId=studyPostImage.getId();
-        this.imageUrl=studyPostImage.getImageUrl();
+        this.imageUrl=studyPostImage.getImageUrl ();
     }
 }
