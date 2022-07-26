@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -43,7 +44,11 @@ public class UserStudy implements Serializable {
     @NotNull
     private Color color;
 
-    public Integer addNowFine() { //repotyService에서 사용
+    @Column
+    private Integer lateCount;
+
+
+    public Integer addNowFine() {
         this.nowFine += this.study.getMoney();
         return this.nowFine;
     }
@@ -65,8 +70,60 @@ public class UserStudy implements Serializable {
         return this.lastFine;
     }
 
+    public Integer addTwoPoints() {
+        this.score += 2;
+        return this.score;
+    }
+
+    public Integer addOnePoint() {
+        this.score += 1;
+        return this.score;
+    }
+
+    public Integer subtractLateCount() {
+        this.lateCount -= 1;
+        return this.lateCount;
+    }
+
+
+    //오늘이 인증요일이면 1 아니면 0 반환
+    public Integer checkDayOfWeek(LocalDateTime dateTime) {
+        int dayOfWeek = dateTime.getDayOfWeek().getValue(); //월:1, 화:2, ... , 일:7
+
+        boolean check = true;
+
+        switch(dayOfWeek){
+            case 1:
+                check = study.getMon();
+                break ;
+            case 2:
+                check = study.getTue();
+                break ;
+            case 3:
+                check = study.getWed();
+                break ;
+            case 4:
+                check = study.getThu();
+                break ;
+            case 5:
+                check = study.getFri();
+                break ;
+            case 6:
+                check = study.getSat();
+                break ;
+            case 7:
+                check = study.getSun();
+                break ;
+
+        }
+        if(check)
+            return 1;
+        else
+            return 0;
+    }
+
     @Builder
-    public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFine, Integer nowFine, Color color){
+    public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFine, Integer nowFine, Color color, Integer lateCount){
         this.user = user;
         this.study = study;
         this.leader = leader;
@@ -74,5 +131,6 @@ public class UserStudy implements Serializable {
         this.lastFine = lastFine;
         this.nowFine = nowFine;
         this.color = color;
+        this.lateCount = lateCount;
     }
 }

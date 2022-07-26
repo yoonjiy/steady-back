@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -127,55 +125,28 @@ public class StudyPostService {
 
         //요일 구하기
         LocalDateTime date = studyPost.getDate();
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        int dayOfWeekNumber = dayOfWeek.getValue(); //월:1, 화:2, ... , 일:7
 
-        boolean check = true;
         String studyPostSort;
 
-        switch(dayOfWeekNumber){
-            case 1:
-                check = study.getMon();
-                break ;
-            case 2:
-                check = study.getTue();
-                break ;
-            case 3:
-                check = study.getWed();
-                break ;
-            case 4:
-                check = study.getThu();
-                break ;
-            case 5:
-                check = study.getFri();
-                break ;
-            case 6:
-                check = study.getSat();
-                break ;
-            case 7:
-                check = study.getSun();
-                break ;
-
-        }
-
-        //글 쓴 날이 인증요일이다
-        if(check) {
-            if (date.getHour() < study.getHour() || (date.getHour() == study.getHour() && date.getMinute() < study.getMinute())) {
+        //오늘이 인증요일이고 인증시간 전이다
+        if(userStudy.checkDayOfWeek(date) == 1 &&(date.getHour() < study.getHour() || (date.getHour() == study.getHour() && date.getMinute() < study.getMinute()))) {
                 studyPostSort = "인증 성공";
+                userStudy.addTwoPoints();
+                userStudy.subtractLateCount();
+                userStudy.subtractMoney();
             }
-            else{
-                userStudy.addLateMoney();
-                studyPostSort = "지각";
-            }
-        }
         else {
-            if(userStudy.getNowFine() > 0) {
+            //오늘이 인증요일 아닌데 결석한 적 있거나 인증요일인데 인증시간 지난 후
+            if(userStudy.getLateCount() > 0) {
                 userStudy.subtractMoney();
                 userStudy.addLateMoney();
                 studyPostSort = "보충 인증 ";
+                userStudy.subtractLateCount();
             }
+            //오늘 인증요일 아닌데 결석도 한 적 없는 경우
             else {
                 studyPostSort = "추가 인증 ";
+                userStudy.addOnePoint();
             }
         }
 
