@@ -75,6 +75,10 @@ public class StudyService {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
+        if(studyRequestDto.getName().equals("")) {
+            throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
+        }
+
         if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
