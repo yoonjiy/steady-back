@@ -32,4 +32,3 @@ public class StudyPostResponseDto {
     private String studyPostSort;
 
 }
-
