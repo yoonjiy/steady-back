@@ -2,10 +2,7 @@ package com.steady.steadyback.service;
 
 import com.steady.steadyback.domain.User;
 import com.steady.steadyback.domain.UserRepository;
-import com.steady.steadyback.dto.UserFindResponseDto;
-import com.steady.steadyback.dto.UserRequestDto;
-import com.steady.steadyback.dto.SignupRequestDto;
-import com.steady.steadyback.dto.UserResponseDto;
+import com.steady.steadyback.dto.*;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -127,12 +124,12 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserResponseDto updateUser(Long userId, SignupRequestDto updateRequestDto){
+    public UserUpdateResponseDto updateUser(Long userId, UserUpdateRequestDto updateRequestDto){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        user.update(updateRequestDto.getName(), updateRequestDto.getNickname(), updateRequestDto.getEmail(), updateRequestDto.getPassword(), updateRequestDto.getPhone());
+        user.update(updateRequestDto);
 
-        return new UserResponseDto(userRepository.save(user));
+        return new UserUpdateResponseDto(userRepository.save(user), "정보가 수정되었습니다.");
     }
 
 
