@@ -1,5 +1,6 @@
 package com.steady.steadyback.dto;
 
+import com.steady.steadyback.domain.UserStudy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,4 +16,5 @@ public class UserStudyResponseDto {
         this.studyId = studyId;
         this.message = message;
     }
+
 }

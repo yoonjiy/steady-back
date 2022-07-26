@@ -47,4 +47,8 @@ public class UserStudyController {
         return rankingList;
     }
 
+    @GetMapping("/my-study")
+    public List<UserStudyGetResponseDto> getStudyListByUser(@AuthenticationPrincipal User user) {
+        return userStudyService.getStudyListByUser(user);
+    }
 }
