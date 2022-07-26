@@ -22,10 +22,12 @@ public class StudyPostImage {
     @Column(length = 100)
     private String imageUrl;
 
+
     @Builder
-    public StudyPostImage (Long id, StudyPost studyPost, String imageUrl){
+    public StudyPostImage(Long id, StudyPost studyPost, String imageUrl){
         this.id= id;
         this.studyPost=studyPost;
-        this.imageUrl= imageUrl;
+        this.imageUrl = imageUrl;
     }
+
 }

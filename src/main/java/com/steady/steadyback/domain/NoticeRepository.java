@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface StudyPostImageRepository extends JpaRepository<StudyPostImage, Long> {
-    List<StudyPostImage> findByStudyPost(StudyPost studyPost);
+public interface NoticeRepository extends JpaRepository<Notice, Long> {
+    public List<Notice> findAllByStudyId(Long studyId);
 }
