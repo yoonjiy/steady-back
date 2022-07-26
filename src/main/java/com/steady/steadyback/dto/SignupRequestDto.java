@@ -1,6 +1,8 @@
 package com.steady.steadyback.dto;
 
 import com.steady.steadyback.domain.User;
+import com.steady.steadyback.util.errorutil.CustomException;
+import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +29,10 @@ public class SignupRequestDto {
 
     public void encryptPassword(PasswordEncoder passwordEncoder) {
 
-        this.password = passwordEncoder.encode(password);
+        if(password.isEmpty())
+            throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
+        else
+            this.password = passwordEncoder.encode(password);
     }
 
     public User toEntity(SignupRequestDto signupRequestDto) {
