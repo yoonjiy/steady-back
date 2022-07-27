@@ -48,6 +48,10 @@ public class UserStudy implements Serializable {
     @NotNull
     private Integer todayPost;
 
+    @Column
+    @NotNull
+    private Integer todayFine;
+
 
     public Integer addNowFine() {
         this.nowFine += this.study.getMoney();
@@ -86,6 +90,10 @@ public class UserStudy implements Serializable {
         return this.todayPost;
     }
 
+    public Integer subtractTodayFine() {
+        this.todayFine -= 1;
+        return this.todayFine;
+    }
 
     //오늘이 인증요일이면 1 아니면 0 반환
     public Integer checkDayOfWeek(LocalDateTime dateTime) {
@@ -132,7 +140,7 @@ public class UserStudy implements Serializable {
     }
 
     @Builder
-    public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFine, Integer nowFine, Color color, Integer todayPost){
+    public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFine, Integer nowFine, Color color, Integer todayPost, Integer todayFine){
         this.user = user;
         this.study = study;
         this.leader = leader;
@@ -141,5 +149,6 @@ public class UserStudy implements Serializable {
         this.nowFine = nowFine;
         this.color = color;
         this.todayPost = todayPost;
+        this.todayFine = todayFine;
     }
 }

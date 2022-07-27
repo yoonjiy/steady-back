@@ -133,6 +133,7 @@ public class StudyPostService {
                 studyPostSort = "인증 성공";
                 userStudy.addTwoPoints();
                 userStudy.subtractTodayPost();
+                userStudy.subtractTodayFine();
             }
         else {
             //오늘이 인증요일 아닌데 결석한 적 있거나 인증요일인데 인증시간 지난 후
