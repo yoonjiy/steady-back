@@ -1,9 +1,6 @@
 package com.steady.steadyback.domain;
 
-import com.steady.steadyback.dto.SignupRequestDto;
-import com.steady.steadyback.dto.StudyRequestDto;
-import com.steady.steadyback.dto.UserRequestDto;
-import com.steady.steadyback.dto.UserUpdateRequestDto;
+import com.steady.steadyback.dto.*;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -69,8 +66,8 @@ public class User implements UserDetails {
         this.role = "USER";
     }
 
-    public void updatePw (String pw) {
-        this.password= pw;
+    public void updatePw (UserFindPwRequestDto userFindPwRequestDto) {
+        this.password= userFindPwRequestDto.getPassword();
     }
 
 

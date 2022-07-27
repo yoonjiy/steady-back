@@ -48,6 +48,8 @@ public class StudyService {
                 .nowFine(0)
                 .lastFine(0)
                 .color(Color.values()[(int) (Math.random() * 9)])
+                .todayPost(0)
+                .todayFine(0)
                 .build();
 
         userStudyRepository.save(userStudy);
