@@ -4,6 +4,7 @@ import com.steady.steadyback.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @NoArgsConstructor
@@ -21,4 +22,6 @@ public class UserFindResponseDto {
         this.email= user.getEmail();
         this.message= message ;
     }
+
+
 }

@@ -95,8 +95,13 @@ public class UserController {
         String email = param.get("email");
         User user= userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        return userService.findPw(user);
+        String pw = "";
+        for(int i=0; i<12; i++) {
+            pw+=(char) ((Math.random()*26) +97 );
+        }
+        UserFindPwRequestDto userFindPwRequestDto= new UserFindPwRequestDto(user,pw);
+        userFindPwRequestDto.encryptPassword(passwordEncoder);
+        return userService.findPw(user, userFindPwRequestDto, pw);
     }
 
 
