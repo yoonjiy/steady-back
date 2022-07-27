@@ -87,6 +87,8 @@ public class UserStudyService {
                 .nowFine(0)
                 .leader(false)
                 .score(0)
+                .todayPost(0)
+                .todayFine(0)
                 .build();
 
         UserStudy save = userStudyRepository.save(newUserStudy);
