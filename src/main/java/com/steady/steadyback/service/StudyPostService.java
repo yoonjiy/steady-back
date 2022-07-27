@@ -12,6 +12,7 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -50,15 +51,31 @@ public class StudyPostService {
     }
     public List<StudyPostGetResponseDto> findStudyPostListByDateAndStudy(Long studyId, String date) {
 
+
         LocalDate Date = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+
         Study study= studyRepository.findById(studyId).orElseThrow(()->new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-        List<StudyPost> list = studyPostRepository.findByStudyAndDate(study, Date);
+        List<StudyPost> list = studyPostRepository.findAllByStudyId(studyId);//studyId로 studyPostlist 찾기
+        List<StudyPost> list2= new ArrayList<>();
+        for(StudyPost studyPost : list) {
+            LocalDateTime time=studyPost.getDate();
+            String compare=time.format((DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            if(date.equals(compare.substring(0,10))) {
+                list2.add(studyPost);
+            }
+        }
+
         List<StudyPostGetResponseDto> total= new ArrayList<>();
-        for (StudyPost studyPost:list){
+        for (StudyPost studyPost:list2){
             List<StudyPostImage> studyPostImage= studyPostImageRepository.findByStudyPost(studyPost);
-            for(StudyPostImage studyPostImage1: studyPostImage) {
-                total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+            if(studyPostImage.size()==0) {
+                total.add(new StudyPostGetResponseDto(studyPost));
+            }
+            else {
+                for (StudyPostImage studyPostImage1 : studyPostImage) {
+                    total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+                }
             }
         }
 
@@ -74,13 +91,25 @@ public class StudyPostService {
         LocalDate Date = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
         User user= userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        List<StudyPost> list = studyPostRepository.findByUserAndDate(user, Date);
+        List<StudyPost> list = studyPostRepository.findAllByUserId(userId);
+        List<StudyPost> list2= new ArrayList<>();
+        for(StudyPost studyPost : list) {
+            LocalDateTime time=studyPost.getDate();
+            String compare=time.format((DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            if(date.equals(compare.substring(0,10))) {
+                list2.add(studyPost);
+            }
+        }
         List<StudyPostGetResponseDto> total= new ArrayList<>();
-        for (StudyPost studyPost:list){
+        for (StudyPost studyPost:list2){
             List<StudyPostImage> studyPostImage= studyPostImageRepository.findByStudyPost(studyPost);
-            for(StudyPostImage studyPostImage1: studyPostImage) {
-                total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
-
+            if(studyPostImage.size()==0) {
+                total.add(new StudyPostGetResponseDto(studyPost));
+            }
+            else {
+                for (StudyPostImage studyPostImage1 : studyPostImage) {
+                    total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+                }
             }
         }
 
