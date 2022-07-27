@@ -9,6 +9,7 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class ReportService {
     private final StudyRepository studyRepository;
     private final UserStudyRepository userStudyRepository;
 
+    @Transactional
     public ReportResponseDto createReport(ReportRequestDto reportRequestDto, User user) {
         StudyPost studyPost = studyPostRepository.findById(reportRequestDto.getStudyPostId())
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_POST_NOT_FOUND));
@@ -74,6 +76,7 @@ public class ReportService {
         return reportResponseDto;
     }
 
+    @Transactional
     public String deleteReportById(Long reportId, User user) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
@@ -88,6 +91,7 @@ public class ReportService {
         return "SUCCESS";
     }
 
+    @Transactional
     public String cancelReportById(Long reportId, User user) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
