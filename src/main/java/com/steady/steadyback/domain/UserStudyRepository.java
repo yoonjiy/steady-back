@@ -25,8 +25,8 @@ public interface UserStudyRepository extends JpaRepository<UserStudy, UserStudyI
     public void updateScore(@Param("userId") Long userId, @Param("studyId") Long studyId, @Param("score") Integer score);
 
     @Modifying(clearAutomatically = true)
-    @Query("update UserStudy u set u.lateCount = u.lateCount + :lateCount where u.user.id=:userId and u.study.id=:studyId")
-    public void updateLateCount(@Param("userId") Long userId, @Param("studyId") Long studyId, @Param("lateCount") Integer lateCount);
+    @Query("update UserStudy u set u.todayPost = u.todayPost + :todayPost where u.user.id=:userId and u.study.id=:studyId")
+    public void updateTodayPost(@Param("userId") Long userId, @Param("studyId") Long studyId, @Param("todayPost") Integer todayPost);
 
     @Modifying(clearAutomatically = true)
     @Query("update UserStudy u set u.nowFine = :nowFine + u.nowFine where u.user.id=:userId and u.study.id=:studyId")

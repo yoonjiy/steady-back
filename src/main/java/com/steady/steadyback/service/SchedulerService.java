@@ -34,18 +34,25 @@ public class SchedulerService {
 
     }
 
-    //매일 그 날이 인증요일인지 확인 -> 맞으면 lateCount +1, nowFine +결석비만큼
+    //매일 자정에 그 날이 인증요일인지 확인 -> 맞으면 todayPost +1
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void setNowFineAndLateCount() {
         LocalDateTime date = LocalDateTime.now();
         userStudyRepository.findAll()
                 .stream()
-                .forEach(userStudy -> userStudyRepository.updateLateCount(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.checkDayOfWeek(date)*1));
+                .forEach(userStudy -> userStudyRepository.updateTodayPost(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.checkDayOfWeek(date)*1));
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 * * * * *")
+    public void addNowFine() {
+        LocalDateTime date = LocalDateTime.now();
         userStudyRepository.findAll()
                 .stream()
-                .forEach(userStudy -> userStudyRepository.updateNowFine(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.checkDayOfWeek(date)*userStudy.getStudy().getMoney()));
+                .forEach(userStudy -> userStudyRepository.updateNowFine(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.getTodayPost()*userStudy.checkDayOfWeek(date)*userStudy.checkHourAndMinute(date)*userStudy.getStudy().getMoney()));
 
 
     }
+
 }

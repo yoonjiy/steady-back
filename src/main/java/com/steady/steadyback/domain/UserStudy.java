@@ -45,7 +45,8 @@ public class UserStudy implements Serializable {
     private Color color;
 
     @Column
-    private Integer lateCount;
+    @NotNull
+    private Integer todayPost;
 
 
     public Integer addNowFine() {
@@ -80,9 +81,9 @@ public class UserStudy implements Serializable {
         return this.score;
     }
 
-    public Integer subtractLateCount() {
-        this.lateCount -= 1;
-        return this.lateCount;
+    public Integer subtractTodayPost() {
+        this.todayPost -= 1;
+        return this.todayPost;
     }
 
 
@@ -122,8 +123,16 @@ public class UserStudy implements Serializable {
             return 0;
     }
 
+    public Integer checkHourAndMinute(LocalDateTime dateTime) {
+        if(dateTime.getHour() == study.getHour()) {
+            if(dateTime.getMinute() == study.getMinute())
+                return 1;
+        }
+        return 0;
+    }
+
     @Builder
-    public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFine, Integer nowFine, Color color, Integer lateCount){
+    public UserStudy(User user, Study study, Boolean leader, Integer score, Integer lastFine, Integer nowFine, Color color, Integer todayPost){
         this.user = user;
         this.study = study;
         this.leader = leader;
@@ -131,6 +140,6 @@ public class UserStudy implements Serializable {
         this.lastFine = lastFine;
         this.nowFine = nowFine;
         this.color = color;
-        this.lateCount = lateCount;
+        this.todayPost = todayPost;
     }
 }

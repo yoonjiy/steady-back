@@ -132,16 +132,15 @@ public class StudyPostService {
         if(userStudy.checkDayOfWeek(date) == 1 &&(date.getHour() < study.getHour() || (date.getHour() == study.getHour() && date.getMinute() < study.getMinute()))) {
                 studyPostSort = "인증 성공";
                 userStudy.addTwoPoints();
-                userStudy.subtractLateCount();
-                userStudy.subtractMoney();
+                userStudy.subtractTodayPost();
             }
         else {
             //오늘이 인증요일 아닌데 결석한 적 있거나 인증요일인데 인증시간 지난 후
-            if(userStudy.getLateCount() > 0) {
+            if(userStudy.getTodayPost() > 0) {
                 userStudy.subtractMoney();
                 userStudy.addLateMoney();
                 studyPostSort = "보충 인증 ";
-                userStudy.subtractLateCount();
+                userStudy.subtractTodayPost();
             }
             //오늘 인증요일 아닌데 결석도 한 적 없는 경우
             else {
