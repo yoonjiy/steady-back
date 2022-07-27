@@ -37,11 +37,21 @@ public class SchedulerService {
     //매일 자정에 그 날이 인증요일인지 확인 -> 맞으면 todayPost +1
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
-    public void setNowFineAndLateCount() {
+    public void addTodayPost() {
         LocalDateTime date = LocalDateTime.now();
         userStudyRepository.findAll()
                 .stream()
                 .forEach(userStudy -> userStudyRepository.updateTodayPost(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.checkDayOfWeek(date)*1));
+    }
+
+    //매주 todayPost 0으로 초기화
+    @Transactional
+    @Scheduled(cron = "0 0 0 ? * MON")
+    public void resetTodayPost() {
+        userStudyRepository.findAll()
+                .stream()
+                .forEach(userStudy -> userStudyRepository.updateTodayPost(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.getTodayPost()*(-1)));
+
     }
 
     @Transactional
