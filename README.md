@@ -13,6 +13,7 @@
 'STEADY' 는 스터디 관리를 해주는 웹 서비스입니다. 회원가입을 한 누구나 스터디를 개설할 수 있으며 기한 관리, 스터디 인증글 작성, 벌금 정산, 랭킹 제도, 투두리스트, 신고 등의 기능을 통해 STEADY는 유저들이 원활한 스터디 활동을 할 수 있도록 돕습니다. 스터디 부원들에게는 동기부여를, 스터디 관리가 부담스러워 선뜻 개설하지 못하는 스터디장에게는 부담을 대신해주는 서비스를 제공하고 있습니다. 
 
 ## 🍈 기술 스택
+
 - DEVELOP &nbsp; 
 ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=round-square&logo=Spring&logoColor=white) 
 
@@ -22,6 +23,14 @@
 <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=Amazon%20AWS&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat-square&logo=AmazonS3&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat-square&logo=Amazon EC2&logoColor=white"/> 
 
 - ETC &nbsp; <img src="https://img.shields.io/badge/GitHub -181717?style=flat-square&logo=GitHub&logoColor=white"/>
+</br>
+
+<p align = "center">
+<img src="https://user-images.githubusercontent.com/80975932/181478239-21a7dee6-08ab-4b5c-a79d-b0f9b506cedf.png"/>
+</p>
+
+
+</br>
 
 ## 🍈 라이브러리
 1. lombok
@@ -33,6 +42,7 @@
 7. spring mail
 
 ## 🍈 프로젝트 구조
+
 
 ### 설명
 1. main/java/[프로젝트명]/config ▶️ Config
