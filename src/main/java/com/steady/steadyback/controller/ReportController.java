@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/reports")
 public class ReportController {
     private final ReportService reportService;
