@@ -50,7 +50,7 @@
 3. main/java/[프로젝트명]/domain ▶️ Entity, Repository
 4. main/java/[프로젝트명]/dto ▶️ Dto
 5. main/java/[프로젝트명]/service ▶️ Service
-6. main/java/[프로젝트명]/Application.java
+6. main/java/[프로젝트명]/SteadyBackApplication.java
 7. main/resources/application.properties
 
 ### 폴더 
