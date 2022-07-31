@@ -10,6 +10,7 @@ import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -61,12 +62,26 @@ public class UserController {
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
         }
-        String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole());
+        String token = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail(), user.getRole());
+
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
                 .user(user)
                 .token(token)
+                .refreshToken(refreshToken)
                 .build();
         return loginResponseDto;
+    }
+
+    @GetMapping("/re-issue")
+    public ResponseEntity<LoginResponseDto> reIssue(@RequestBody TokenRequestDto tokenRequestDto) {
+        User user = userRepository.findByEmail(tokenRequestDto.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        jwtTokenProvider.checkRefreshToken(tokenRequestDto.getEmail(), tokenRequestDto.getRefreshToken());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole());
+        LoginResponseDto responseDto = new LoginResponseDto(user.getEmail(), accessToken, tokenRequestDto.getRefreshToken());
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
