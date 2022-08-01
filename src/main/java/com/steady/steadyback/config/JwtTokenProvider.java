@@ -1,5 +1,8 @@
 package com.steady.steadyback.config;
 
+import com.steady.steadyback.service.RedisService;
+import com.steady.steadyback.util.errorutil.CustomException;
+import com.steady.steadyback.util.errorutil.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
@@ -22,12 +26,16 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
+    private final RedisService redisService;
 
     @Value("${jwt.secret")
     private String secretKey;
 
-    // 토큰 유효시간 3시간
-    private long tokenValidTime = 180 * 60 * 1000L;
+    // 토큰 유효시간 1시간
+    private long tokenValidTime = 60 * 60 * 1000L;
+
+    // refreshToken 유효시간 2주
+    private long refreshTokenValidTime = 60 * 60 * 24 * 14 * 1000L;
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct
@@ -36,16 +44,34 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String userPk, String role) {
-        Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
-        claims.put("roles", role);
-        Date now = new Date();
+    public String createAccessToken(String userId, String roles) {
+        return this.createToken(userId, roles, tokenValidTime);
+    }
+
+    //refreshToken 생성
+    public String createRefreshToken(String userId, String roles) {
+        String refreshToken = this.createToken(userId, roles, refreshTokenValidTime);
+        redisService.setValues(userId, refreshToken, Duration.ofMillis(refreshTokenValidTime));
+        return refreshToken;
+    }
+
+    private String createToken(String userId, String roles, Long tokenValidTime){
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
+        claims.put("roles", roles); // 권한 설정, key/ value 쌍으로 저장
+        Date date = new Date();
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+                .setClaims(claims) // 발행 유저 정보 저장
+                .setIssuedAt(date) // 발행 시간 저장
+                .setExpiration(new Date(date.getTime() + tokenValidTime)) // 토큰 유효 시간 저장
+                .signWith(SignatureAlgorithm.HS256, secretKey) // 해싱 알고리즘 및 키 설정
+                .compact(); // 생성
+    }
+
+    public void checkRefreshToken(String userId, String refreshToken) {
+        String redisRT = redisService.getValues(userId);
+        if (!refreshToken.equals(redisRT)) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
     }
 
     // JWT 토큰에서 인증 정보 조회
