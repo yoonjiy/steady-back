@@ -68,6 +68,7 @@
     │               │   ├── 📑 CustomAuthenticationEntryPoint.java
     │               │   ├── 📑 JwtAuthenticationFilter.java
     │               │   ├── 📑 JwtTokenProvider.java
+    │               │   ├── 📑 RedisConfig.java    
     │               │   ├── 📑 S3Config.java
     │               │   └── 📑 WebSecurityConfig.java
     │               ├── 🗂 controller
@@ -113,6 +114,7 @@
     │               │   ├── 📑 StudyRequestDto.java
     │               │   ├── 📑 StudyResponseDto.java
     │               │   ├── 📑 TodolistResponseDto.java
+    │               │   ├── 📑 TokenRequestDto.java    
     │               │   ├── 📑 UserDeleteResponseDto.java
     │               │   ├── 📑 UserFindPwRequestDto.java
     │               │   ├── 📑 UserFindResponseDto.java
@@ -126,6 +128,7 @@
     │               │   └── 📑 UserUpdateResponseDto.java
     │               ├── 🗂 service
     │               │   ├── 📑 NoticeService.java
+    │               │   ├── 📑 RedisService.java
     │               │   ├── 📑 ReportService.java
     │               │   ├── 📑 SchedulerService.java
     │               │   ├── 📑 StudyPostService.java
