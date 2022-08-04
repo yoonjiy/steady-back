@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 public class UserStudyRankingResponseDto implements Comparable<UserStudyRankingResponseDto>{
     private Long userId;
     private Long studyId;
+    private String nickname;
     private Integer score;
     private String color;
 
     public UserStudyRankingResponseDto(UserStudy userStudy){
         this.userId = userStudy.getUser().getId();
         this.studyId = userStudy.getStudy().getId();
+        this.nickname = userStudy.getUser().getNickname();
         this.score = userStudy.getScore();
         this.color = userStudy.getColor().getValue();
     }
