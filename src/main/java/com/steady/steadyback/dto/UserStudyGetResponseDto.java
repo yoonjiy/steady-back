@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 public class UserStudyGetResponseDto {
     private Long userId;
     private Long studyId;
+    private String name;
+    private String description;
     private Boolean leader;
     private Integer score;
     private Integer lastFine;
@@ -20,6 +22,8 @@ public class UserStudyGetResponseDto {
     public UserStudyGetResponseDto(UserStudy userStudy){
         this.userId = userStudy.getUser().getId();
         this.studyId = userStudy.getStudy().getId();
+        this.name = userStudy.getStudy().getName();
+        this.description = userStudy.getStudy().getDescription();
         this.leader = userStudy.getLeader();
         this.score = userStudy.getScore();
         this.lastFine = userStudy.getLastFine();

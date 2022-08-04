@@ -30,6 +30,9 @@ public class Study {
     @Column(length = 200)
     private String uuid;
 
+    @Column(length = 45)
+    private String summary;
+
     @Column(length = 100)
     private String description;
 
@@ -61,8 +64,14 @@ public class Study {
     @Column
     private Boolean sun;
 
+    @Column(name = "account_bank", length = 10)
+    private String accountBank;
+
     @Column(length = 20)
     private String account;
+
+    @Column(name = "account_name", length = 10)
+    private String accountName;
 
     @NotNull
     @Column
@@ -85,10 +94,11 @@ public class Study {
     private Integer peopleCount;
 
     @Builder
-    public Study(Long id, String name, String uuid, String description, Boolean mon, Boolean tue, Boolean wed, Boolean thu, Boolean fri, Boolean sat, Boolean sun, String account, Integer hour, Integer minute, Integer money, Integer lateMoney, Integer peopleCount) {
+    public Study(Long id, String name, String uuid, String summary, String description, Boolean mon, Boolean tue, Boolean wed, Boolean thu, Boolean fri, Boolean sat, Boolean sun, String accountBank, String account, String accountName, Integer hour, Integer minute, Integer money, Integer lateMoney, Integer peopleCount) {
         this.id = id;
         this.name = name;
         this.uuid = uuid;
+        this.summary = summary;
         this.description = description;
         this.mon = mon;
         this.tue = tue;
@@ -97,7 +107,9 @@ public class Study {
         this.fri = fri;
         this.sat = sat;
         this.sun = sun;
+        this.accountBank = accountBank;
         this.account = account;
+        this.accountName = accountName;
         this.hour = hour;
         this.minute = minute;
         this.money = money;
@@ -107,6 +119,7 @@ public class Study {
 
     public void updateDescription(StudyRequestDto studyRequestDto) {
         this.name = studyRequestDto.getName();
+        this.summary = studyRequestDto.getSummary();
         this.description = studyRequestDto.getDescription();
     }
 
@@ -118,7 +131,9 @@ public class Study {
         this.fri = studyRequestDto.getFri();
         this.sat = studyRequestDto.getSat();
         this.sun = studyRequestDto.getSun();
+        this.accountBank = studyRequestDto.getAccountBank();
         this.account = studyRequestDto.getAccount();
+        this.accountName = studyRequestDto.getAccountName();
         this.hour = studyRequestDto.getHour();
         this.minute = studyRequestDto.getMinute();
         this.money = studyRequestDto.getMoney();

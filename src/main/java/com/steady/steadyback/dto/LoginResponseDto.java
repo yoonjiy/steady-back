@@ -1,23 +1,21 @@
 package com.steady.steadyback.dto;
 
 import com.steady.steadyback.domain.User;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class LoginResponseDto {
-    String email;
-    String token;
-    String refreshToken;
+    private Long userId;
+    private String email;
+    private String token;
 
     @Builder
-    public LoginResponseDto(User user, String token, String refreshToken){
+    public LoginResponseDto(User user, String token){
+        this.userId = user.getId();
         this.email = user.getEmail();
         this.token = token;
-        this.refreshToken = refreshToken;
     }
 }
