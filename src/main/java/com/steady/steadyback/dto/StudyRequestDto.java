@@ -11,6 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class StudyRequestDto {
     private String name;
+    private String summary;
     private String description;
     private String uuid;
     private Boolean mon;
@@ -20,7 +21,9 @@ public class StudyRequestDto {
     private Boolean fri;
     private Boolean sat;
     private Boolean sun;
+    private String accountBank;
     private String account;
+    private String accountName;
     private Integer hour;
     private Integer minute;
     private Integer money;
@@ -28,9 +31,10 @@ public class StudyRequestDto {
     private Integer peopleCount;
 
     @Builder
-    public StudyRequestDto(String name, String description, Boolean mon, Boolean tue, Boolean wed, Boolean thu, Boolean fri, Boolean sat, Boolean sun,
-                           String account, Integer hour, Integer minute, Integer money, Integer lateMoney) {
+    public StudyRequestDto(String name, String summary, String description, Boolean mon, Boolean tue, Boolean wed, Boolean thu, Boolean fri, Boolean sat, Boolean sun,
+                           String accountBank, String account, String accountName, Integer hour, Integer minute, Integer money, Integer lateMoney) {
         this.name = name;
+        this.summary = summary;
         this.description = description;
         this.mon = mon;
         this.tue = tue;
@@ -39,7 +43,9 @@ public class StudyRequestDto {
         this.fri = fri;
         this.sat = sat;
         this.sun = sun;
+        this.accountBank = accountBank;
         this.account = account;
+        this.accountName = accountName;
         this.hour = hour;
         this.minute = minute;
         this.money = money;
@@ -48,6 +54,7 @@ public class StudyRequestDto {
 
     public StudyRequestDto(Study study) {
         this.name = study.getName();
+        this.summary = study.getSummary();
         this.description = study.getDescription();
         this.mon = study.getMon();
         this.tue = study.getTue();
@@ -56,7 +63,9 @@ public class StudyRequestDto {
         this.fri = study.getFri();
         this.sat = study.getSat();
         this.sun = study.getSun();
+        this.accountBank = study.getAccountBank();
         this.account = study.getAccount();
+        this.accountName = study.getAccountName();
         this.hour = study.getHour();
         this.minute = study.getMinute();
         this.money = study.getMoney();
@@ -71,6 +80,7 @@ public class StudyRequestDto {
         return Study.builder()
                 .name(name)
                 .uuid(uuid)
+                .summary(summary)
                 .description(description)
                 .mon(mon)
                 .tue(tue)
@@ -79,7 +89,9 @@ public class StudyRequestDto {
                 .fri(fri)
                 .sat(sat)
                 .sun(sun)
+                .accountBank(accountBank)
                 .account(account)
+                .accountName(accountName)
                 .hour(hour)
                 .minute(minute)
                 .money(money)
