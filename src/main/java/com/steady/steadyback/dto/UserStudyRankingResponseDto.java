@@ -1,5 +1,6 @@
 package com.steady.steadyback.dto;
 
+import com.steady.steadyback.domain.Color;
 import com.steady.steadyback.domain.UserStudy;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,11 +11,13 @@ public class UserStudyRankingResponseDto implements Comparable<UserStudyRankingR
     private Long userId;
     private Long studyId;
     private Integer score;
+    private String color;
 
     public UserStudyRankingResponseDto(UserStudy userStudy){
         this.userId = userStudy.getUser().getId();
         this.studyId = userStudy.getStudy().getId();
         this.score = userStudy.getScore();
+        this.color = userStudy.getColor().getValue();
     }
 
     @Override
