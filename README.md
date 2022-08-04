@@ -38,7 +38,7 @@
 3. spring data jpa
 4. junit
 5. spring boot test
-6. jjwt
+6. jwt
 7. spring mail
 
 ## 🍈 프로젝트 구조
