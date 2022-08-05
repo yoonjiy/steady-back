@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConfigController {
     @GetMapping("/health-check")
     public String checkHealth() {
-        return "Steady Day!";
+        return "Steady Day!!";
     }
 }
