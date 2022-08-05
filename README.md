@@ -3,9 +3,9 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FEFUB-steady%2Fsteady-back&count_bg=%2344D0B3&title_bg=%23CEE1C1&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
 ## 🍈 백엔드 팀원
-| [김민주](https://github.com/MINJU-KIMmm)                                                                                             | [김윤지](https://github.com/yoonjiy)                                                                       | [변지은](https://github.com/mons-trev)                                                                                                                 | [최빈](https://github.com/chlqls)                                                                     |
-|--------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| <img src = "https://user-images.githubusercontent.com/80975932/181456398-351ceac7-5d40-4d0d-a462-38bcc9bdd5f2.png" width="100%"/>                                   | <img src = "https://user-images.githubusercontent.com/80975932/181456524-c552d522-c010-48b0-9c8a-c03cbcaebeb2.png" width="98%"/>         | <img src = "https://user-images.githubusercontent.com/80975932/181457826-d3060ff6-d85b-4d29-ab82-8f5904482364.png" width="100%"/>                                                 | <img src = "https://user-images.githubusercontent.com/80975932/181457910-99f905fb-3e8d-45c3-9aa7-49355ddb7a6a.png" width="89%"/>        |
+| [김민주](https://github.com/MINJU-KIMmm)                                                            | [김윤지](https://github.com/yoonjiy)                                                            | [변지은](https://github.com/mons-trev)                                                            | [최빈](https://github.com/chlqls)                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|<img src = "https://user-images.githubusercontent.com/80975932/181456398-351ceac7-5d40-4d0d-a462-38bcc9bdd5f2.png" width="100%"/>         | <img src = "https://user-images.githubusercontent.com/80975932/181456524-c552d522-c010-48b0-9c8a-c03cbcaebeb2.png" width="100%"/>         | <img src = "https://user-images.githubusercontent.com/80975932/181457826-d3060ff6-d85b-4d29-ab82-8f5904482364.png" width="100%"/>         | <img src = "https://user-images.githubusercontent.com/80975932/181457910-99f905fb-3e8d-45c3-9aa7-49355ddb7a6a.png" width="89%"/>         |
 | [스터디] 스터디 생성, 삭제, 규칙 수정 기능</br> [신고] 신고하기, 신고 인증 취소, 신고 취소, 신고 조회 기능</br> [배포] Docker/EC2를 이용한 CI/CD 구축,</br> loadBalancer/route53/SSL인증서를 이용해 HTTPS 통신 구현 </br> [기타] 프로젝트 생성 | [유저] 회원 가입, 로그인, 탈퇴 기능 </br>[스터디] 스터디 가입, 탈퇴, 벌금 정산 기능 </br> [투두리스트] 투두리스트 조회, 완료 체크 기능</br> [DB] RDS 생성 | [유저] 아이디 찾기, 임시비밀번호 전송 기능</br>[스터디] 날짜별 스터디 인증글 조회 기능</br> [DB] ERD 작성 </br>[기타] readme 작성| [유저] 회원 가입, 로그인, 탈퇴, 조회 기능</br> [스터디] 인증 글쓰기(벌금로직 다르게), 공지사항 등록 조회 기능 </br> [AWS] s3|
 
 -------------------
@@ -17,16 +17,17 @@
 - DEVELOP &nbsp; 
 ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=round-square&logo=Spring&logoColor=white) 
 
-- DB &nbsp; <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat-square&logo=Amazon RDS&logoColor=white"/> 
+- DB &nbsp; <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> 
 
 - AWS &nbsp;
-<img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=Amazon%20AWS&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat-square&logo=AmazonS3&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat-square&logo=Amazon EC2&logoColor=white"/> 
+<img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=Amazon%20AWS&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat-square&logo=AmazonS3&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=flat-square&logo=Amazon EC2&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=flat-square&logo=Amazon RDS&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon LoadBalancer-E68B49?style=flat-square&logo=Amazon LoadBalancer&logoColor=white"/>
 
-- ETC &nbsp; <img src="https://img.shields.io/badge/GitHub -181717?style=flat-square&logo=GitHub&logoColor=white"/>
+
+- ETC &nbsp; <img src="https://img.shields.io/badge/GitHub -181717?style=flat-square&logo=GitHub&logoColor=white"/> <img src="https://img.shields.io/badge/Doker -2496ED?style=flat-square&logo=Docker&logoColor=white"/> 
 </br>
 
 <p align = "center">
-<img src="https://user-images.githubusercontent.com/80975932/181478239-21a7dee6-08ab-4b5c-a79d-b0f9b506cedf.png"/>
+<img src="![image](https://user-images.githubusercontent.com/80975932/182993432-35d32e52-c05f-48c8-8f47-6051c6549085.png)"/>
 </p>
 
 
