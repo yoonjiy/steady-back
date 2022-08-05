@@ -27,7 +27,7 @@
 </br>
 
 <p align = "center">
-<img src="![image](https://user-images.githubusercontent.com/80975932/182993432-35d32e52-c05f-48c8-8f47-6051c6549085.png)"/>
+<img src="https://user-images.githubusercontent.com/80975932/182993432-35d32e52-c05f-48c8-8f47-6051c6549085.png"/>
 </p>
 
 
