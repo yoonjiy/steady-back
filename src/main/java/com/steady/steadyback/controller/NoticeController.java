@@ -26,7 +26,7 @@ public class NoticeController {
         return noticeService.findNoticeListByStudyId(studyId);
     }
 
-    @GetMapping("/studies/{noticeId}")
+    @GetMapping("/{noticeId}")
     public NoticeResponseDto getNoticeByNoticeId(@PathVariable Long noticeId) {
         return noticeService.findNoticeById(noticeId);
     }
