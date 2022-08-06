@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @NoArgsConstructor
@@ -32,7 +33,7 @@ public class Report {
 
     @PrePersist
     public void createDate(){
-        this.date = LocalDateTime.now();
+        this.date = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();;
     }
 
     @Builder

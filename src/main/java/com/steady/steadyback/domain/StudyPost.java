@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 
 @Entity
@@ -41,7 +42,7 @@ public class StudyPost {
 
     @PrePersist
     public void createDate(){
-        this.date = LocalDateTime.now();
+        this.date = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();;
     }   // local 시간으로 저장
 
     @Builder

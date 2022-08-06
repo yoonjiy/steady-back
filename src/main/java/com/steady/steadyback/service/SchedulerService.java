@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 
 @Service
@@ -38,7 +39,7 @@ public class SchedulerService {
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void addTodayPost() {
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime date = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();;
         userStudyRepository.findAll()
                 .stream()
                 .forEach(userStudy -> userStudyRepository.updateTodayPost(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.checkDayOfWeek(date)*1));
@@ -58,7 +59,7 @@ public class SchedulerService {
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void addTodayFine() {
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime date = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();;
         userStudyRepository.findAll()
                 .stream()
                 .forEach(userStudy -> userStudyRepository.updateTodayFine(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.checkDayOfWeek(date)*1));
@@ -76,7 +77,7 @@ public class SchedulerService {
     @Transactional
     @Scheduled(cron = "0 * * * * *")
     public void addNowFine() {
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime date = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();;
         userStudyRepository.findAll()
                 .stream()
                 .forEach(userStudy -> userStudyRepository.updateNowFine(userStudy.getUser().getId(), userStudy.getStudy().getId(), userStudy.getTodayFine()*userStudy.checkDayOfWeek(date)*userStudy.checkHourAndMinute(date)*userStudy.getStudy().getMoney()));
