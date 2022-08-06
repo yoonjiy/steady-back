@@ -42,7 +42,7 @@ public class StudyPostController {
     }
 
     @GetMapping("/{studyPostId}") //스터디 인증글 하나 조회
-    public StudyPostGetResponseDto getStudyPostById(@PathVariable Long studyPostId) {
+    public List<StudyPostGetResponseDto> getStudyPostById(@PathVariable Long studyPostId) {
         return studyPostService.findByStudyIdStudyPostId(studyPostId);
     }
 

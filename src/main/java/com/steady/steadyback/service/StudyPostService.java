@@ -43,11 +43,21 @@ public class StudyPostService {
 
     private final AmazonS3Client amazonS3Client;
 
-    public StudyPostGetResponseDto findByStudyIdStudyPostId(Long studyPostId) {
+    public List<StudyPostGetResponseDto> findByStudyIdStudyPostId(Long studyPostId) {
         StudyPost studyPost= studyPostRepository.findById(studyPostId)
                 .orElseThrow(()->new CustomException(ErrorCode.STUDY_POST_NOT_FOUND));
+        List<StudyPostGetResponseDto> total= new ArrayList<>();
 
-        return new StudyPostGetResponseDto(studyPost);
+            List<StudyPostImage> studyPostImage= studyPostImageRepository.findByStudyPost(studyPost);
+            if(studyPostImage.size()==0) {
+                total.add(new StudyPostGetResponseDto(studyPost));
+            }
+            else {
+                for (StudyPostImage studyPostImage1 : studyPostImage) {
+                    total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+                }
+            }
+      return total;
     }
     public List<StudyPostGetResponseDto> findStudyPostListByDateAndStudy(Long studyId, String date) {
 
