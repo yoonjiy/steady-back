@@ -36,7 +36,15 @@ public class ReportService {
                 .build()
         );
 
-        ReportResponseDto reportResponseDto = new ReportResponseDto(report.getId(), report.getUser().getId(), report.getStudyPost().getId());
+        ReportResponseDto reportResponseDto = ReportResponseDto.builder()
+                .reportId(report.getId())
+                .reporterId(user.getId())
+                .reporterName(user.getNickname())
+                .violatorId(studyPost.getUser().getId())
+                .violatorName(studyPost.getUser().getNickname())
+                .studyPostId(studyPost.getId())
+                .date(report.getDate())
+                .build();
 
         return reportResponseDto;
     }

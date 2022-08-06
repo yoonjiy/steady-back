@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -26,10 +27,19 @@ public class Report {
     @JoinColumn(name = "study_post_id")
     private StudyPost studyPost;
 
+    @Column
+    private LocalDateTime date;
+
+    @PrePersist
+    public void createDate(){
+        this.date = LocalDateTime.now();
+    }
+
     @Builder
-    public Report(User user, StudyPost studyPost) {
+    public Report(User user, StudyPost studyPost, LocalDateTime date) {
         this.user = user;
         this.studyPost = studyPost;
+        this.date = date;
     }
 
 }
