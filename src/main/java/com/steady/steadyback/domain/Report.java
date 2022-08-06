@@ -33,7 +33,7 @@ public class Report {
 
     @PrePersist
     public void createDate(){
-        this.date = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();;
+        this.date = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
     }
 
     @Builder
