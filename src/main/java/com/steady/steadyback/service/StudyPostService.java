@@ -43,11 +43,21 @@ public class StudyPostService {
 
     private final AmazonS3Client amazonS3Client;
 
-    public StudyPostGetResponseDto findByStudyIdStudyPostId(Long studyPostId) {
+    public List<StudyPostGetResponseDto> findByStudyIdStudyPostId(Long studyPostId) {
         StudyPost studyPost= studyPostRepository.findById(studyPostId)
                 .orElseThrow(()->new CustomException(ErrorCode.STUDY_POST_NOT_FOUND));
+        List<StudyPostGetResponseDto> total= new ArrayList<>();
 
-        return new StudyPostGetResponseDto(studyPost);
+            List<StudyPostImage> studyPostImage= studyPostImageRepository.findByStudyPost(studyPost);
+            if(studyPostImage.size()==0) {
+                total.add(new StudyPostGetResponseDto(studyPost));
+            }
+            else {
+                for (StudyPostImage studyPostImage1 : studyPostImage) {
+                    total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+                }
+            }
+      return total;
     }
     public List<StudyPostGetResponseDto> findStudyPostListByDateAndStudy(Long studyId, String date) {
 
@@ -123,7 +133,7 @@ public class StudyPostService {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
 
-    public StudyPostResponseDto createStudyPost(StudyPostRequestDto studyPostRequestDto, List<MultipartFile> multipartFiles) throws IOException {
+    public StudyPostResponseDto createStudyPost(StudyPostRequestDto studyPostRequestDto, List<MultipartFile> multipartFiles, User user) throws IOException {
 
         int imageCount = 0;
         for (MultipartFile file : multipartFiles) {
@@ -136,21 +146,13 @@ public class StudyPostService {
         if(imageCount > 2)
             throw new CustomException(ErrorCode.OVER_2_IMAGES);
 
-        User user = studyPostRequestDto.getUser();
-        userRepository.findById(user.getId())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        Study study = studyPostRequestDto.getStudy();
-        studyRepository.findById(study.getId())
+        Study study = studyRepository.findById(studyPostRequestDto.getStudyId())
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
-
 
         UserStudy userStudy = userStudyRepository.findByUserAndStudy(user, study)
                 .orElseThrow(() -> new CustomException(ErrorCode.INFO_NOT_FOUNT));
 
-        study = userStudy.getStudy();
-
-        StudyPost studyPost = studyPostRepository.save(studyPostRequestDto.toEntity());
+        StudyPost studyPost = studyPostRepository.save(studyPostRequestDto.toEntity(user, study));
 
         //요일 구하기
         LocalDateTime date = studyPost.getDate();
@@ -163,7 +165,7 @@ public class StudyPostService {
                 userStudy.addTwoPoints();
                 userStudy.subtractTodayPost();
                 userStudy.subtractTodayFine();
-            }
+        }
         else {
             //오늘이 인증요일 아닌데 결석한 적 있거나 인증요일인데 인증시간 지난 후
             if(userStudy.getTodayPost() > 0) {

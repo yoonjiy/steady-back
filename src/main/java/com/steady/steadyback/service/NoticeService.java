@@ -54,6 +54,21 @@ public class NoticeService {
         return new NoticeResponseDto(notice);
     }
 
+    public NoticeResponseDto findNoticeByStudyAndNoticeId(Long studyId, Long noticeId) {
+
+        Study study = studyRepository.findById(studyId)
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTICE_NOT_FOUND));
+
+        if (study.getId() != notice.getStudy().getId()) {
+            throw new CustomException(ErrorCode.INFO_NOT_FOUNT);
+        }
+
+        return new NoticeResponseDto(notice);
+    }
+
     public Long updateNotice(Long id, NoticeRequestDto noticeRequestDto) {
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOTICE_NOT_FOUND));
