@@ -12,12 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StudyPostRequestDto {
 
-    private User user;
-    private Study study;
+    private Long studyId;
     private String link;
 
-
-    public StudyPost toEntity()  {
+    public StudyPost toEntity(User user, Study study)  {
         return StudyPost.builder()
                 .user(user)
                 .study(study)

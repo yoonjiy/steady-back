@@ -8,6 +8,7 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class StudyService {
         return new StudyGetResponseDto(study);
     }
 
+    @Transactional
     public Long createStudy(StudyRequestDto studyRequestDto, User user) {
         if(studyRequestDto.getName().isEmpty()) {
             throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
@@ -46,6 +48,8 @@ public class StudyService {
                 .nowFine(0)
                 .lastFine(0)
                 .color(Color.values()[(int) (Math.random() * 9)])
+                .todayPost(0)
+                .todayFine(0)
                 .build();
 
         userStudyRepository.save(userStudy);
@@ -60,6 +64,7 @@ public class StudyService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteStudyById(Long id, User user) {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
@@ -71,9 +76,14 @@ public class StudyService {
         studyRepository.deleteById(id);
     }
 
+    @Transactional
     public Long updateStudyDescription(Long id, StudyRequestDto studyRequestDto, User user) {
         Study study = studyRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        if(studyRequestDto.getName().equals("")) {
+            throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
+        }
 
         if(!userStudyRepository.existsByUserAndStudyAndLeaderIsTrue(user, study)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);

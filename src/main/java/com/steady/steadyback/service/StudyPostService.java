@@ -12,6 +12,7 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,23 +43,49 @@ public class StudyPostService {
 
     private final AmazonS3Client amazonS3Client;
 
-    public StudyPostGetResponseDto findByStudyIdStudyPostId(Long studyPostId) {
+    public List<StudyPostGetResponseDto> findByStudyIdStudyPostId(Long studyPostId) {
         StudyPost studyPost= studyPostRepository.findById(studyPostId)
                 .orElseThrow(()->new CustomException(ErrorCode.STUDY_POST_NOT_FOUND));
+        List<StudyPostGetResponseDto> total= new ArrayList<>();
 
-        return new StudyPostGetResponseDto(studyPost);
+            List<StudyPostImage> studyPostImage= studyPostImageRepository.findByStudyPost(studyPost);
+            if(studyPostImage.size()==0) {
+                total.add(new StudyPostGetResponseDto(studyPost));
+            }
+            else {
+                for (StudyPostImage studyPostImage1 : studyPostImage) {
+                    total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+                }
+            }
+      return total;
     }
     public List<StudyPostGetResponseDto> findStudyPostListByDateAndStudy(Long studyId, String date) {
 
+
         LocalDate Date = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+
         Study study= studyRepository.findById(studyId).orElseThrow(()->new CustomException(ErrorCode.STUDY_NOT_FOUND));
 
-        List<StudyPost> list = studyPostRepository.findByStudyAndDate(study, Date);
+        List<StudyPost> list = studyPostRepository.findAllByStudyId(studyId);//studyId로 studyPostlist 찾기
+        List<StudyPost> list2= new ArrayList<>();
+        for(StudyPost studyPost : list) {
+            LocalDateTime time=studyPost.getDate();
+            String compare=time.format((DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            if(date.equals(compare.substring(0,10))) {
+                list2.add(studyPost);
+            }
+        }
+
         List<StudyPostGetResponseDto> total= new ArrayList<>();
-        for (StudyPost studyPost:list){
+        for (StudyPost studyPost:list2){
             List<StudyPostImage> studyPostImage= studyPostImageRepository.findByStudyPost(studyPost);
-            for(StudyPostImage studyPostImage1: studyPostImage) {
-                total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+            if(studyPostImage.size()==0) {
+                total.add(new StudyPostGetResponseDto(studyPost));
+            }
+            else {
+                for (StudyPostImage studyPostImage1 : studyPostImage) {
+                    total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+                }
             }
         }
 
@@ -76,13 +101,25 @@ public class StudyPostService {
         LocalDate Date = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
         User user= userRepository.findById(userId).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        List<StudyPost> list = studyPostRepository.findByUserAndDate(user, Date);
+        List<StudyPost> list = studyPostRepository.findAllByUserId(userId);
+        List<StudyPost> list2= new ArrayList<>();
+        for(StudyPost studyPost : list) {
+            LocalDateTime time=studyPost.getDate();
+            String compare=time.format((DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            if(date.equals(compare.substring(0,10))) {
+                list2.add(studyPost);
+            }
+        }
         List<StudyPostGetResponseDto> total= new ArrayList<>();
-        for (StudyPost studyPost:list){
+        for (StudyPost studyPost:list2){
             List<StudyPostImage> studyPostImage= studyPostImageRepository.findByStudyPost(studyPost);
-            for(StudyPostImage studyPostImage1: studyPostImage) {
-                total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
-
+            if(studyPostImage.size()==0) {
+                total.add(new StudyPostGetResponseDto(studyPost));
+            }
+            else {
+                for (StudyPostImage studyPostImage1 : studyPostImage) {
+                    total.add(new StudyPostGetResponseDto(studyPost, new StudyPostImageResponseDto(studyPostImage1)));
+                }
             }
         }
 
@@ -96,7 +133,7 @@ public class StudyPostService {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷 이름
 
-    public StudyPostResponseDto createStudyPost(StudyPostRequestDto studyPostRequestDto, List<MultipartFile> multipartFiles) throws IOException {
+    public StudyPostResponseDto createStudyPost(StudyPostRequestDto studyPostRequestDto, List<MultipartFile> multipartFiles, User user) throws IOException {
 
         int imageCount = 0;
         for (MultipartFile file : multipartFiles) {
@@ -109,71 +146,38 @@ public class StudyPostService {
         if(imageCount > 2)
             throw new CustomException(ErrorCode.OVER_2_IMAGES);
 
-        User user = studyPostRequestDto.getUser();
-        userRepository.findById(user.getId())
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        Study study = studyPostRequestDto.getStudy();
-        studyRepository.findById(study.getId())
+        Study study = studyRepository.findById(studyPostRequestDto.getStudyId())
                 .orElseThrow(() -> new CustomException(ErrorCode.STUDY_NOT_FOUND));
-
-
-        StudyPost studyPost = studyPostRepository.save(studyPostRequestDto.toEntity());
 
         UserStudy userStudy = userStudyRepository.findByUserAndStudy(user, study)
                 .orElseThrow(() -> new CustomException(ErrorCode.INFO_NOT_FOUNT));
 
+        StudyPost studyPost = studyPostRepository.save(studyPostRequestDto.toEntity(user, study));
+
         //요일 구하기
         LocalDateTime date = studyPost.getDate();
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        int dayOfWeekNumber = dayOfWeek.getValue(); //월:1, 화:2, ... , 일:7
 
-        boolean check = true;
         String studyPostSort;
 
-        switch(dayOfWeekNumber){
-            case 1:
-                check = study.getMon();
-                break ;
-            case 2:
-                check = study.getTue();
-                break ;
-            case 3:
-                check = study.getWed();
-                break ;
-            case 4:
-                check = study.getThu();
-                break ;
-            case 5:
-                check = study.getFri();
-                break ;
-            case 6:
-                check = study.getSat();
-                break ;
-            case 7:
-                check = study.getSun();
-                break ;
-
-        }
-
-        //글 쓴 날이 인증요일이다
-        if(check) {
-            if (date.getHour() < study.getHour() || (date.getHour() == study.getHour() && date.getMinute() < study.getMinute())) {
+        //오늘이 인증요일이고 인증시간 전이다
+        if(userStudy.checkDayOfWeek(date) == 1 &&(date.getHour() < study.getHour() || (date.getHour() == study.getHour() && date.getMinute() < study.getMinute()))) {
                 studyPostSort = "인증 성공";
-            }
-            else{
-                userStudy.addLateMoney();
-                studyPostSort = "지각";
-            }
+                userStudy.addTwoPoints();
+                userStudy.subtractTodayPost();
+                userStudy.subtractTodayFine();
         }
         else {
-            if(userStudy.getNowFine() > 0) {
+            //오늘이 인증요일 아닌데 결석한 적 있거나 인증요일인데 인증시간 지난 후
+            if(userStudy.getTodayPost() > 0) {
                 userStudy.subtractMoney();
                 userStudy.addLateMoney();
                 studyPostSort = "보충 인증 ";
+                userStudy.subtractTodayPost();
             }
+            //오늘 인증요일 아닌데 결석도 한 적 없는 경우
             else {
                 studyPostSort = "추가 인증 ";
+                userStudy.addOnePoint();
             }
         }
 

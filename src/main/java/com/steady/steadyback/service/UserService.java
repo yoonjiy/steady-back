@@ -38,6 +38,9 @@ public class UserService implements UserDetailsService {
     @Transactional
     public ResponseEntity<Object> joinUser(SignupRequestDto signupRequestDto){
 
+        if (signupRequestDto.getName().isEmpty()||signupRequestDto.getNickname().isEmpty()||signupRequestDto.getEmail().isEmpty()||signupRequestDto.getPassword().isEmpty()||signupRequestDto.getPhone().isEmpty())
+            throw new CustomException(ErrorCode.CANNOT_EMPTY_CONTENT);
+
         User user = signupRequestDto.toEntity(signupRequestDto);
 
         userRepository.save(user);
@@ -68,19 +71,16 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserFindResponseDto findPw(User user) {
-        String pw = "";
-        for(int i=0; i<12; i++) {
-            pw+=(char) ((Math.random()*26) +97 );
-        }
-        user.updatePw(pw);
+    public UserFindResponseDto findPw(User user, UserFindPwRequestDto userFindPwRequestDto, String pw) {
 
-        sendEmail(user);
+        user.updatePw(userFindPwRequestDto);
+        userRepository.save(user);
+        sendEmail(user, pw);
 
-        return new UserFindResponseDto(user, "이메일이 성공적으로 전송되었습니다.");
+        return new UserFindResponseDto(user,  "이메일이 성공적으로 전송되었습니다.");
     }
 
-    public void sendEmail(User user)  {
+    public void sendEmail(User user, String pw)  {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(sender);
         message.setTo(user.getEmail());
@@ -89,7 +89,7 @@ public class UserService implements UserDetailsService {
 
         msg += user.getName() + "님의 임시 비밀번호 입니다. 비밀번호를 변경하여 사용하세요.";
         msg += "\n 임시 비밀번호 : ";
-        msg += user.getPassword() ;
+        msg += pw ;
 
         message.setText(msg);
 

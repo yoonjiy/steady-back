@@ -19,7 +19,7 @@ public class StudyPostImage {
     @JoinColumn(name= "study_post_id")
     private StudyPost studyPost;
 
-    @Column(length = 100)
+    @Column(length = 300)
     private String imageUrl;
 
 
@@ -31,4 +31,3 @@ public class StudyPostImage {
     }
 
 }
-

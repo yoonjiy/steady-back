@@ -1,15 +1,14 @@
 package com.steady.steadyback.controller;
 
+import com.steady.steadyback.domain.User;
 import com.steady.steadyback.dto.StudyPostGetResponseDto;
 import com.steady.steadyback.dto.StudyPostRequestDto;
 import com.steady.steadyback.dto.StudyPostResponseDto;
 import com.steady.steadyback.service.StudyPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,8 +18,6 @@ import java.net.URI;
 import com.steady.steadyback.dto.StudyPostResponseDto;
 import com.steady.steadyback.service.StudyPostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,8 +33,8 @@ public class StudyPostController {
 
     @PostMapping
     public ResponseEntity<StudyPostResponseDto> createStudyPost(    @RequestPart("content") StudyPostRequestDto studyPostRequestDto,
-                                                                    @RequestPart("imgUrl") List<MultipartFile> multipartFiles) throws IOException {
-        StudyPostResponseDto studyPostResponseDto = studyPostService.createStudyPost(studyPostRequestDto, multipartFiles);
+                                                                    @RequestPart("imgUrl") List<MultipartFile> multipartFiles, @AuthenticationPrincipal User user) throws IOException {
+        StudyPostResponseDto studyPostResponseDto = studyPostService.createStudyPost(studyPostRequestDto, multipartFiles, user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(studyPostResponseDto.getStudyPostId())
@@ -47,7 +44,7 @@ public class StudyPostController {
     }
 
     @GetMapping("/{studyPostId}") //스터디 인증글 하나 조회
-    public StudyPostGetResponseDto getStudyPostById(@PathVariable Long studyPostId) {
+    public List<StudyPostGetResponseDto> getStudyPostById(@PathVariable Long studyPostId) {
         return studyPostService.findByStudyIdStudyPostId(studyPostId);
     }
 

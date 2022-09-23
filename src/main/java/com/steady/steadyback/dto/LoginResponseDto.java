@@ -8,11 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class LoginResponseDto {
-    String email;
-    String token;
+    private Long userId;
+    private String email;
+    private String token;
 
     @Builder
     public LoginResponseDto(User user, String token){
+        this.userId = user.getId();
         this.email = user.getEmail();
         this.token = token;
     }

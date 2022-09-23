@@ -10,21 +10,9 @@ import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.tags.Param;
 
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.InputStream;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -95,8 +83,13 @@ public class UserController {
         String email = param.get("email");
         User user= userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-
-        return userService.findPw(user);
+        String pw = "";
+        for(int i=0; i<12; i++) {
+            pw+=(char) ((Math.random()*26) +97 );
+        }
+        UserFindPwRequestDto userFindPwRequestDto= new UserFindPwRequestDto(user,pw);
+        userFindPwRequestDto.encryptPassword(passwordEncoder);
+        return userService.findPw(user, userFindPwRequestDto, pw);
     }
 
 

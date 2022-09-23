@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class TodolistService {
             Study study = userStudy.getStudy();
 
             //오늘의 인증글이 올라오지 않은 스터디만
-            LocalDateTime today = LocalDateTime.now();
+            LocalDateTime today = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
             StudyPost studyPost = studyPostRepository.findByUserAndStudyAndDate(user, study, today);
 
             if(studyPost!=null){
