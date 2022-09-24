@@ -20,5 +20,4 @@ public interface StudyPostRepository extends JpaRepository<StudyPost, Long> {
 
     public StudyPost findByUserAndStudyAndDate(User user, Study study, LocalDateTime date);
     public List<StudyPost> findAllByUserId(Long userId);
-
 }

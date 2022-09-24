@@ -240,4 +240,22 @@ public class StudyPostService {
         return Optional.empty();
     }
 
+    public void deleteStudyPostById (Long userId, Long studyPostId) {
+
+        StudyPost studyPost= studyPostRepository.getById(studyPostId);
+
+        User user= userRepository.getById(studyPost.getUser().getId());
+
+        if(userId==studyPost.getUser().getId()) {
+            studyPostRepository.findById(studyPostId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.STUDY_POST_NOT_FOUND));
+            
+            studyPostRepository.deleteById(studyPostId);
+        }
+        else
+        {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+    }
+
 }
