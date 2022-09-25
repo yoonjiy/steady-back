@@ -40,9 +40,9 @@ public class UserController {
 
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
-        User user = userService.findUserByEmail(loginRequestDto.getEmail());
+        User user = userService.findUserByEmail(loginRequestDto.getEmail().trim());
 
-        if (!userRepository.existsByEmail(loginRequestDto.getEmail())) {
+        if (!userRepository.existsByEmail(loginRequestDto.getEmail().trim())) {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
