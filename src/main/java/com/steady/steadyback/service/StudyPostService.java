@@ -258,4 +258,28 @@ public class StudyPostService {
         }
     }
 
+    public StudyPostCheckResponseDto findStudyPostNumByDateAndStudy(Long studyId, String date) {
+
+
+        LocalDate Date = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+
+        Study study= studyRepository.findById(studyId).orElseThrow(()->new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        List<StudyPost> list = studyPostRepository.findAllByStudyId(studyId);//studyId로 studyPostlist 찾기
+        List<StudyPost> list2= new ArrayList<>();
+        for(StudyPost studyPost : list) {
+            LocalDateTime time=studyPost.getDate();
+            String compare=time.format((DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            if(date.equals(compare.substring(0,10))) {
+                list2.add(studyPost);
+            }
+        }
+
+        if(list.isEmpty()) throw new CustomException(ErrorCode.STUDY_POST_LIST_NOT_FOUND);
+
+        return new StudyPostCheckResponseDto(study.getPeopleCount(), list2.size());
+
+    }
+
 }
+

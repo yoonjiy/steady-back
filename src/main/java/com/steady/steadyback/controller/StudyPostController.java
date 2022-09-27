@@ -65,5 +65,11 @@ public class StudyPostController {
         return new StudyPostDeleteResponseDto(studyPostId, "SUCCESS");
     }
 
+    @GetMapping("/check/{studyId}/{date}")
+    public StudyPostCheckResponseDto getStudyPostCheckNumByStudyIdAndDate(@PathVariable Long studyId, @PathVariable String date) {
+        return studyPostService.findStudyPostNumByDateAndStudy(studyId, date);
+
+    }
+
 
 }
