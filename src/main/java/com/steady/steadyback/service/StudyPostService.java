@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -267,17 +264,19 @@ public class StudyPostService {
 
         List<StudyPost> list = studyPostRepository.findAllByStudyId(studyId);//studyId로 studyPostlist 찾기
         List<StudyPost> list2= new ArrayList<>();
+        Set<Long> check= new HashSet<>();
         for(StudyPost studyPost : list) {
             LocalDateTime time=studyPost.getDate();
             String compare=time.format((DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
             if(date.equals(compare.substring(0,10))) {
                 list2.add(studyPost);
+                check.add(studyPost.getUser().getId());
             }
         }
 
         if(list.isEmpty()) throw new CustomException(ErrorCode.STUDY_POST_LIST_NOT_FOUND);
 
-        return new StudyPostCheckResponseDto(study.getPeopleCount(), list2.size());
+        return new StudyPostCheckResponseDto(study.getPeopleCount(), check.size());
 
     }
 
