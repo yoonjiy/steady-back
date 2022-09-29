@@ -52,4 +52,29 @@ public class StudyGetResponseDto {
         this.lateMoney = study.getLateMoney();
         this.peopleCount = study.getPeopleCount();
     }
+
+    public Study toEntity() {
+        return Study.builder()
+                .id(this.studyId)
+                .name(this.name)
+                .uuid(this.uuid)
+                .summary(this.summary)
+                .description(this.description)
+                .mon(this.mon)
+                .tue(this.tue)
+                .wed(this.wed)
+                .thu(this.thu)
+                .fri(this.fri)
+                .sat(this.sat)
+                .sun(this.sun)
+                .accountBank(this.accountBank)
+                .account(this.account)
+                .accountName(this.accountName)
+                .hour(this.hour)
+                .minute(this.minute)
+                .money(this.money)
+                .lateMoney(this.lateMoney)
+                .peopleCount(this.peopleCount)
+                .build();
+    }
 }
