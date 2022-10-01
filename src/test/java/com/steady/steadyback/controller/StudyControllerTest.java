@@ -65,33 +65,13 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 class StudyControllerTest {
 
     @Autowired
-    private WebApplicationContext context;
-
-//    @Autowired
-//    private ObjectMapper objectMapper;
-
-    @Mock
-    private StudyService studyService;
-
-    @InjectMocks
-    private StudyController studyController;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserController userController;
-
-    @Autowired
     private StudyRepository studyRepository;
 
     @Autowired
     private MockMvc mvc;
 
     private static StudyRequestDto studyRequestDto = new StudyRequestDto();
-
-
-
+    
     @BeforeAll
     public static void setStudy() {
         studyRequestDto = StudyRequestDto.builder()
@@ -204,28 +184,25 @@ class StudyControllerTest {
     }
 
 
-//    @Test
-//    @WithMockUser(roles = "USER")
-//    public void 스터디설명수정_권한없음() throws Exception {
-//        MvcResult mvcResult = mvc.perform(post("/studies")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new ObjectMapper().writeValueAsString(studyRequestDto)))
-//                .andReturn();
-//
-//        JSONObject jsonObject = new JSONObject(mvcResult.getResponse().getContentAsString());
-//        String id = jsonObject.get("studyId").toString();
-//
-//        studyRequestDto.setName("modified name");
-//        studyRequestDto.setSummary("modified summary");
-//        studyRequestDto.setDescription("modified description");
-//
-//        mvc.perform(put("/studies/" + id + "/descriptions")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new ObjectMapper().writeValueAsString(studyRequestDto)))
-//                .andExpect(status().isUnauthorized())
-//                .andDo(print());
-//
-//    }
+    @Test
+    @WithMockUser(roles = "USER")
+    @Transactional
+    public void 스터디설명수정_권한없음() throws Exception {
+        Study study = studyRepository.save(studyRequestDto.toEntity());
+
+        String id = study.getId().toString();
+
+        studyRequestDto.setName("modified name");
+        studyRequestDto.setSummary("modified summary");
+        studyRequestDto.setDescription("modified description");
+
+        mvc.perform(put("/studies/" + id + "/descriptions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(studyRequestDto)))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+
+    }
 
     @Test
     @WithUserDetails(value = "test5@efub.com", userDetailsServiceBeanName = "userService")
