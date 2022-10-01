@@ -1,62 +1,28 @@
 package com.steady.steadyback.controller;
 
-import com.amazonaws.util.json.Jackson;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.steady.steadyback.domain.Study;
 import com.steady.steadyback.domain.StudyRepository;
-import com.steady.steadyback.domain.User;
-import com.steady.steadyback.domain.UserRepository;
-import com.steady.steadyback.dto.LoginRequestDto;
 import com.steady.steadyback.dto.StudyRequestDto;
-import com.steady.steadyback.dto.UserResponseDto;
-import com.steady.steadyback.service.StudyService;
-import com.steady.steadyback.service.UserService;
-import com.steady.steadyback.util.errorutil.CustomException;
-import com.steady.steadyback.util.errorutil.ErrorCode;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 
 @RunWith(SpringRunner.class)
@@ -71,7 +37,7 @@ class StudyControllerTest {
     private MockMvc mvc;
 
     private static StudyRequestDto studyRequestDto = new StudyRequestDto();
-    
+
     @BeforeAll
     public static void setStudy() {
         studyRequestDto = StudyRequestDto.builder()
@@ -146,7 +112,7 @@ class StudyControllerTest {
     @WithUserDetails(value = "test5@efub.com", userDetailsServiceBeanName = "userService")
     @Transactional
     public void 스터디삭제() throws Exception {
-        MvcResult mvcResult = mvc.perform(post("/studies") //.with(user(user))
+        MvcResult mvcResult = mvc.perform(post("/studies")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(studyRequestDto)))
                 .andReturn();
