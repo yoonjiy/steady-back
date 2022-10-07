@@ -1,9 +1,10 @@
 package com.steady.steadyback.controller;
 
+import com.steady.steadyback.domain.StudyPost;
+import com.steady.steadyback.domain.StudyPostImage;
+import com.steady.steadyback.domain.StudyPostRepository;
 import com.steady.steadyback.domain.User;
-import com.steady.steadyback.dto.StudyPostGetResponseDto;
-import com.steady.steadyback.dto.StudyPostRequestDto;
-import com.steady.steadyback.dto.StudyPostResponseDto;
+import com.steady.steadyback.dto.*;
 import com.steady.steadyback.service.StudyPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +58,18 @@ public class StudyPostController {
     public List<StudyPostGetResponseDto> getStudyPostListByUserAndDate(@PathVariable Long userId, @PathVariable String date) {
         return studyPostService.findStudyPostListByDateAndUser(userId, date);
     }
+
+    @DeleteMapping("/users/{userId}/{studyPostId}")//다른 사람 게시글을 지우지 않게 userId도 보내기
+    public StudyPostDeleteResponseDto deleteStudyPost(@PathVariable Long userId, @PathVariable Long studyPostId) {
+        studyPostService.deleteStudyPostById(userId, studyPostId);
+        return new StudyPostDeleteResponseDto(studyPostId, "SUCCESS");
+    }
+
+    @GetMapping("/check/{studyId}/{date}")
+    public StudyPostCheckResponseDto getStudyPostCheckNumByStudyIdAndDate(@PathVariable Long studyId, @PathVariable String date) {
+        return studyPostService.findStudyPostNumByDateAndStudy(studyId, date);
+
+    }
+
 
 }

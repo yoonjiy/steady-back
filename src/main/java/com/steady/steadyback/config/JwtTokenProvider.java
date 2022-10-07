@@ -1,5 +1,6 @@
 package com.steady.steadyback.config;
 
+import com.steady.steadyback.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -23,11 +24,13 @@ public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
 
-    @Value("${jwt.secret")
+    @Value("${jwt.secret}")
     private String secretKey;
 
     // 토큰 유효시간 3시간
-    private long tokenValidTime = 180 * 60 * 1000L;
+    private long accessTokenValidTime = 60 * 60 * 3 * 1000L;
+    // 14일
+    private long refreshTokenValidTime = 60 * 60 * 24 * 14 * 1000L;
 
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct
@@ -35,15 +38,28 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    // JWT 토큰 생성
-    public String createToken(String userPk, String role) {
+    // Access JWT 토큰 생성
+    public String createAccessToken(String userPk, String role) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
         claims.put("roles", role);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))
+                .setExpiration(new Date(now.getTime() + accessTokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    // Refresh JWT 토큰 생성
+    public String createRefreshToken(String userPk, String role) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
+        claims.put("roles", role);
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
@@ -59,7 +75,7 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Request의 Header에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : "TOKEN값'
+    // Request의 Header에서 token 값을 가져옵니다. "X-AUTH-TOKEN" : "TOKEN값"
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("X-AUTH-TOKEN");
     }

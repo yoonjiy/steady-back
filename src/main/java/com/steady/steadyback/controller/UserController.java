@@ -5,6 +5,7 @@ import com.steady.steadyback.config.JwtTokenProvider;
 import com.steady.steadyback.domain.User;
 import com.steady.steadyback.domain.UserRepository;
 import com.steady.steadyback.dto.*;
+import com.steady.steadyback.service.TokenService;
 import com.steady.steadyback.service.UserService;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
@@ -28,6 +29,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
     @PostMapping("/signup")
     public ResponseEntity<Object> signup(@RequestBody SignupRequestDto signupRequestDto){
@@ -40,21 +42,34 @@ public class UserController {
 
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
-        User user = userService.findUserByEmail(loginRequestDto.getEmail());
+        User user = userService.findUserByEmail(loginRequestDto.getEmail().trim());
 
-        if (!userRepository.existsByEmail(loginRequestDto.getEmail())) {
+        if (!userRepository.existsByEmail(loginRequestDto.getEmail().trim())) {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new CustomException(ErrorCode.INCORRECT_PASSWORD);
         }
-        String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole());
+
+        String access = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole());
+        String refresh = jwtTokenProvider.createRefreshToken(user.getEmail(), user.getRole());
+
+        tokenService.updateRefreshToken(loginRequestDto.getEmail(), refresh); //리프레시 토큰 저장
+
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
                 .user(user)
-                .token(token)
+                .accessToken(access)
+                .refreshToken(refresh)
                 .build();
         return loginResponseDto;
+    }
+
+    @PostMapping("/refresh/token")
+    public RefreshTokenResponseDto refreshToken(@RequestHeader(value="KEY-EMAIL") String email,
+                                                @RequestHeader(value="REFRESH-TOKEN") String refreshToken) {
+        RefreshTokenResponseDto refreshTokenResponseDto = tokenService.refreshToken(email, refreshToken);
+        return refreshTokenResponseDto;
     }
 
     @DeleteMapping("/{userId}")

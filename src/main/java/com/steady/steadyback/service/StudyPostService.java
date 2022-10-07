@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -240,4 +237,48 @@ public class StudyPostService {
         return Optional.empty();
     }
 
+    public void deleteStudyPostById (Long userId, Long studyPostId) {
+
+        StudyPost studyPost= studyPostRepository.getById(studyPostId);
+
+        User user= userRepository.getById(studyPost.getUser().getId());
+
+        if(userId==studyPost.getUser().getId()) {
+            studyPostRepository.findById(studyPostId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.STUDY_POST_NOT_FOUND));
+            
+            studyPostRepository.deleteById(studyPostId);
+        }
+        else
+        {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+    }
+
+    public StudyPostCheckResponseDto findStudyPostNumByDateAndStudy(Long studyId, String date) {
+
+
+        LocalDate Date = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+
+        Study study= studyRepository.findById(studyId).orElseThrow(()->new CustomException(ErrorCode.STUDY_NOT_FOUND));
+
+        List<StudyPost> list = studyPostRepository.findAllByStudyId(studyId);//studyId로 studyPostlist 찾기
+        List<StudyPost> list2= new ArrayList<>();
+        Set<Long> check= new HashSet<>();
+        for(StudyPost studyPost : list) {
+            LocalDateTime time=studyPost.getDate();
+            String compare=time.format((DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+            if(date.equals(compare.substring(0,10))) {
+                list2.add(studyPost);
+                check.add(studyPost.getUser().getId());
+            }
+        }
+
+        if(list.isEmpty()) throw new CustomException(ErrorCode.STUDY_POST_LIST_NOT_FOUND);
+
+        return new StudyPostCheckResponseDto(study.getPeopleCount(), check.size());
+
+    }
+
 }
+
