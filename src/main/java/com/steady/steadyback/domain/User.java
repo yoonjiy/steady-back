@@ -44,7 +44,6 @@ public class User implements UserDetails {
     private String role;
 
     @Builder
-
     public User(String name,String nickname, String email, String password, String phone) {
         this.name = name;
         this.nickname = nickname;
