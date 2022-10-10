@@ -13,15 +13,8 @@ public class LoginRequestDto {
 
     @Builder
     public LoginRequestDto(User user) {
-
         this.email = user.getEmail();
         this.password = user.getPassword();
-
     }
 
-    @Builder
-    public LoginRequestDto(String email, String password) {
-        this.email=email;
-        this.password=password;
-    }
 }
