@@ -17,6 +17,8 @@ import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
 
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +45,8 @@ public class UserController {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final RedisTemplate redisTemplate;
+
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
@@ -235,4 +240,30 @@ public class UserController {
         return userService.updateUser(userId, updateRequestDto);
     }
 
+    @PostMapping("/logout")
+    public LogoutResponseDto logout(@RequestBody LogoutRequestDto logoutRequestDto) {
+        //1. Access Token 검증
+        if(!jwtTokenProvider.validateToken(logoutRequestDto.getAccessToken())) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        //2. Access Token에서 user email 가져옴
+        Authentication authentication = jwtTokenProvider.getAuthentication(logoutRequestDto.getAccessToken());
+        //3. Redis에서 해당 user email로 저장된 refresh token이 있는지 여부를 확인 후 있을 경우 삭제
+        String userEmail = authentication.getName();
+        if(redisTemplate.opsForValue().get(userEmail) != null) {
+            //Refresh token 삭제
+            redisTemplate.delete(userEmail);
+        }
+        else {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        //4. 해당 Access Token 유효시간 가지고 와서 로그아웃 등록
+        Long expiration = jwtTokenProvider.getExpiration(logoutRequestDto.getAccessToken());
+        redisTemplate.opsForValue()
+                .set(logoutRequestDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+
+        return new LogoutResponseDto("로그아웃 되었습니다.");
+    }
 }
