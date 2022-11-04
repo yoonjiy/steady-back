@@ -7,9 +7,11 @@ import com.steady.steadyback.dto.RefreshTokenResponseDto;
 import com.steady.steadyback.util.errorutil.CustomException;
 import com.steady.steadyback.util.errorutil.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpStatus;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +27,7 @@ public class TokenService {
         // Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
         redisTemplate.opsForValue().set(
                 userEmail,
                 refreshToken,
@@ -44,6 +47,9 @@ public class TokenService {
         }
 
         String refreshTokenInRedis = redisTemplate.opsForValue().get(user.getEmail());
+        if(ObjectUtils.isEmpty(refreshTokenInRedis)) {
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_DOESNT_EXIST);
+        }
         if (!refreshToken.equals(refreshTokenInRedis)) {
             throw new CustomException(ErrorCode.REFRESH_TOKEN_DOESNT_MATCH);
         }
