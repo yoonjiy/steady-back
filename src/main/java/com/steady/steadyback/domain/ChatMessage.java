@@ -22,9 +22,10 @@ public class ChatMessage {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @NotNull
-    private String sender;
+    private User sender;
 
     @Column
     @NotNull
