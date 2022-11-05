@@ -1,6 +1,7 @@
 package com.steady.steadyback.domain;
 
 import com.sun.istack.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,5 +24,11 @@ public class ChatRoom {
 
     @Column
     private String roomName;
+
+    @Builder
+    public ChatRoom(String roomId, String roomName){
+        this.roomId = roomId;
+        this.roomName = roomName;
+    }
 
 }

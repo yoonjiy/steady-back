@@ -1,67 +1,71 @@
 package com.steady.steadyback.service;
 
+import com.steady.steadyback.domain.*;
 import com.steady.steadyback.dto.ChatRoomDto;
 import com.steady.steadyback.dto.ChatRoomMap;
+import com.steady.steadyback.util.errorutil.CustomException;
+import com.steady.steadyback.util.errorutil.ErrorCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class ChatService {
-    // 전체 채팅방 조회
-    public List<ChatRoomDto> findAllRoom(){
-        // 채팅방 생성 순서 최신순 반환
-        List<ChatRoomDto> chatRooms = new ArrayList<>(ChatRoomMap.getInstance().getChatRooms().values());
-        Collections.reverse(chatRooms);
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final UserRepository userRepository;
 
-        return chatRooms;
+    // 현재 user가 참여 중인 채팅방 리스트 반환 (roomId, roomName)
+    public List<ChatRoomDto> findAllRoomByUser(User user){
+        return chatRoomMemberRepository.findAllByUser(user)
+                .stream()
+                .map(chatRoomMember -> new ChatRoomDto(chatRoomMember.getRoom().getRoomId(), chatRoomMember.getRoom().getRoomName()))
+                .collect(Collectors.toList());
     }
 
-    // roomId 기준으로 채팅방 찾기
-    public ChatRoomDto findRoomById(String roomId){
-        return ChatRoomMap.getInstance().getChatRooms().get(roomId);
-    }
-
-    // 채팅방 만들기
-    public ChatRoomDto createChatRoom(String roomName, String chatType){
-        ChatRoomDto room = ChatRoomDto.builder()
+    // 1:1 채팅방 개설
+    public ChatRoomDto createOneToOneChatRoom(User user, String targetUser, String roomName){
+        ChatRoom room = ChatRoom.builder()
                 .roomId(UUID.randomUUID().toString())
                 .roomName(roomName)
                 .build();
 
-        room.setUserList(new HashMap<String, String>());
+        User target = userRepository.findByNickname(targetUser)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // map에 채팅룸 저장
-        ChatRoomMap.getInstance().getChatRooms().put(room.getRoomId(), room);
+        //addMember 메서드로 중복 제거하기
+        ChatRoomMember member = ChatRoomMember.builder()
+                .room(room)
+                .member(user)
+                .build();
 
-        return room;
+        ChatRoomMember targetMember = ChatRoomMember.builder()
+                .room(room)
+                .member(target)
+                .build();
+
+        //db에 저장
+        chatRoomRepository.save(room);
+        chatRoomMemberRepository.save(member);
+        chatRoomMemberRepository.save(targetMember);
+
+        return new ChatRoomDto(room.getRoomId(), room.getRoomName());
     }
 
     // 채팅방 삭제
     public void deleteChatRoom(String roomId){
-        ChatRoomMap.getInstance().getChatRooms().remove(roomId);
-    }
-
-    // 채팅방 유저 리스트에 유저 추가
-    public String addUser(String roomId, String userName){
-        ChatRoomDto room = findRoomById(roomId);
-        String userUUID = UUID.randomUUID().toString();
-
-        HashMap<String, String> userList = room.getUserList();
-        userList.put(userUUID, userName);
-
-        return userUUID;
+        ChatRoom room = chatRoomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHAT_ROOM_NOT_FOUND));
+        chatRoomRepository.delete(room);
     }
 
     // 채팅방 유저 리스트 조회
-    public ArrayList<String> getUserList(String roomId){
-        ArrayList<String> list = new ArrayList<>();
+    // 채팅방에 유저 추가
+    // 채팅방에 유저 삭제
 
-        ChatRoomDto room = findRoomById(roomId);
 
-        room.getUserList().forEach(
-                (key, value) -> list.add(value)
-        );
-
-        return list;
-    }
 
 }

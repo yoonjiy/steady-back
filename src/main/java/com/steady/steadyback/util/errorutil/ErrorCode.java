@@ -40,6 +40,9 @@ public enum ErrorCode {
 
     USER_STUDY_ALREADY_EXISTS(CONFLICT, "이미 가입한 스터디원입니다."),
 
+    //채팅방
+    CHAT_ROOM_NOT_FOUND(NOT_FOUND, "존재하지 않는 채팅방입니다.");
+
     ;
 
     private final HttpStatus httpStatus;
