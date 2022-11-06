@@ -4,23 +4,27 @@ import com.steady.steadyback.domain.ChatRoom;
 import com.steady.steadyback.domain.ChatRoomMember;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
-@Builder
 public class ChatRoomDto {
     private String roomId;
     private String roomName;
-
-    //참여 멤버리스트 저장하는 필드 추가하기
-    //private ArrayList<String> members;
+    private List<String> members;
 
     public ChatRoomDto(String roomId, String roomName){
         this.roomId = roomId;
         this.roomName = roomName;
+    }
+
+    public ChatRoomDto(String roomId, String roomName, List<String> memebers){
+        this.roomId = roomId;
+        this.roomName = roomName;
+        this.members = memebers;
     }
 
     // 일단 보류
